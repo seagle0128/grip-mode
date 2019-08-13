@@ -63,7 +63,7 @@
   ;; Start a new grip process
   (setq grip-process
         (start-process (format "grip-%d" grip-port)
-                       (format " *grip-%s*" grip-port)
+                       (format " *grip-%d*" grip-port)
                        grip-mode-binary-path
                        buffer-file-name
                        (number-to-string grip-port)))
