@@ -53,21 +53,22 @@
 
 (defun grip-mode-start-grip-process ()
   "Render and preview with grip."
-  ;; Kill process if it exists
-  (grip-mode-kill-grip-process)
+  (unless grip-process
+    ;; Generat random port
+    (while (< grip-port 3000)
+      (setq grip-port (random 65535)))
 
-  ;; Generat random port
-  (while (< grip-port 3000)
-    (setq grip-port (random 65535)))
+    ;; Start a new grip process
+    (setq grip-process
+          (start-process (format "grip-%d" grip-port)
+                         (format " *grip-%d*" grip-port)
+                         grip-mode-binary-path
+                         buffer-file-name
+                         (number-to-string grip-port)))
+    ;; Wait for process start
+    (sleep-for 1))
 
-  ;; Start a new grip process
-  (setq grip-process
-        (start-process (format "grip-%d" grip-port)
-                       (format " *grip-%d*" grip-port)
-                       grip-mode-binary-path
-                       buffer-file-name
-                       (number-to-string grip-port)))
-  (sleep-for 1) ; wait for process start
+  ;; Open the default browser to preview
   (browse-url (format "http://localhost:%d/%s"
                       grip-port
                       (file-name-nondirectory buffer-file-name))))
@@ -77,7 +78,8 @@
   (when grip-process
     (delete-process grip-process)
     (message "Process `%s' killed" grip-process)
-    (setq grip-process nil)))
+    (setq grip-process nil)
+    (setq grip-port 1088)))
 
 ;;;###autoload
 (define-minor-mode grip-mode
