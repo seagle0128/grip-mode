@@ -48,15 +48,17 @@
 (defvar-local grip-process nil
   "Handle to the inferior grip process.")
 
-(defvar-local grip-port 6419
+(defvar-local grip-port 1088
   "Port to the grip port.")
 
 (defun grip-mode-start-grip-process ()
   "Render and preview with grip."
-  ;; Kill process first
+  ;; Kill process if it exists
   (grip-mode-kill-grip-process)
 
-  (setq grip-port (random 65535))
+  ;; Generat random port
+  (while (< grip-port 3000)
+    (setq grip-port (random 65535)))
 
   ;; Start a new grip process
   (setq grip-process
@@ -71,7 +73,7 @@
                       (file-name-nondirectory buffer-file-name))))
 
 (defun grip-mode-kill-grip-process ()
-  "Kill grip process."
+  "Kill the grip process."
   (when grip-process
     (delete-process grip-process)
     (message "Process `%s' killed" grip-process)
@@ -84,7 +86,7 @@
   (if grip-mode
       (if grip-mode-binary-path
           (grip-mode-start-grip-process)
-        (user-error "You need to have `grip' installed in your environment PATH."))
+        (user-error "You need to have `grip' installed in PATH environment."))
     (grip-mode-kill-grip-process)))
 
 (provide 'grip-mode)
