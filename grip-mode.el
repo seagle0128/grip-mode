@@ -101,7 +101,7 @@
   (if grip-mode
       (if grip-mode-binary-path
           (grip-mode-start-grip-process)
-        (user-error "You need to have `grip' installed in PATH environment."))
+        (user-error "You need to have `grip' installed in PATH environment"))
     (grip-mode-kill-grip-process)))
 
 (provide 'grip-mode)
