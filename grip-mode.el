@@ -1,10 +1,10 @@
-;;; grip-mode.el --- Instant Github-flavored Markdown preview using grip.        -*- lexical-binding: t; -*-
+;;; grip-mode.el --- Instant Github-flavored Markdown/Org preview using grip.        -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019 Vincent Zhang
 
 ;; Author: Vincent Zhang <seagle0128@gmail.com>
 ;; Homepage: https://github.com/seagle0128/doom-modeline
-;; Version: 1.0.0
+;; Version: 1.1.0
 ;; Package-Requires: ((emacs "24.4"))
 ;; Keywords: convenience, markdown, preview
 
@@ -29,7 +29,7 @@
 
 ;;; Commentary:
 
-;; Instant Github-flavored Markdown preview using a grip subprocess.
+;; Instant Github-flavored Markdown/Org preview using a grip subprocess.
 ;;
 ;; Install:
 ;; From melpa, `M-x package-install RET grip-mode RET`.
@@ -47,7 +47,7 @@
 ;;; Code:
 
 (defgroup grip nil
-  "Instant Github-flavored Markdown preview using grip."
+  "Instant Github-flavored Markdown/Org preview using grip."
   :prefix "grip-"
   :group 'markdown)
 
@@ -64,9 +64,12 @@
 (defvar-local grip-port 1088
   "Port to the grip port.")
 
-(defun grip-mode-start-grip-process ()
+(defun grip-mode-start-grip-process (&optional file)
   "Render and preview with grip."
   (unless grip-process
+    (unless grip-mode-binary-path
+      (user-error "You need to have `grip' installed in PATH environment"))
+
     ;; Generat random port
     (while (< grip-port 3000)
       (setq grip-port (random 65535)))
@@ -76,15 +79,9 @@
           (start-process (format "grip-%d" grip-port)
                          (format " *grip-%d*" grip-port)
                          grip-mode-binary-path
-                         buffer-file-name
-                         (number-to-string grip-port)))
-    ;; Wait for process start
-    (sleep-for 1))
-
-  ;; Open the default browser to preview
-  (browse-url (format "http://localhost:%d/%s"
-                      grip-port
-                      (file-name-nondirectory buffer-file-name))))
+                         "--browser"
+                         (or file buffer-file-name)
+                         (number-to-string grip-port)))))
 
 (defun grip-mode-kill-grip-process ()
   "Kill the grip process."
@@ -94,15 +91,47 @@
     (setq grip-process nil)
     (setq grip-port 1088)))
 
+(defun grip-mode-preview-md ()
+  "Render and preview markdown with grip."
+  (grip-mode-start-grip-process))
+
+(declare-function org-md-export-to-markdown 'ox-md)
+(defun grip-mode-org-to-md ()
+  "Render org to markdown."
+  (widen)
+  (deactivate-mark)
+  (org-md-export-to-markdown))
+
+(defun grip-mode-preview-org ()
+  "Render and preview org with grip."
+  (grip-mode-start-grip-process
+   (concat (file-name-directory buffer-file-name)
+           (grip-mode-org-to-md)))
+  (add-hook 'after-save-hook #'grip-mode-org-to-md nil t)
+  (add-hook 'after-revert-hook #'grip-mode-org-to-md nil t))
+
+(defun grip-mode-start-preview ()
+  "Start rendering and previewing with grip."
+  (when buffer-file-name
+    (if (eq major-mode 'org-mode)
+        (grip-mode-preview-org)
+      (grip-mode-preview-md))
+    (add-hook 'before-revert-hook #'grip-mode-kill-grip-process nil t)))
+
+(defun grip-mode-stop-preview ()
+  "Stop rendering and previewing with grip."
+  (grip-mode-kill-grip-process)
+  (remove-hook 'after-save-hook #'grip-mode-org-to-md t)
+  (remove-hook 'after-revert-hook #'grip-mode-org-to-md t)
+  (remove-hook 'before-revert-hook #'grip-mode-kill-grip-process t))
+
 ;;;###autoload
 (define-minor-mode grip-mode
   "Live Markdown preview with grip."
   :lighter " grip"
   (if grip-mode
-      (if grip-mode-binary-path
-          (grip-mode-start-grip-process)
-        (user-error "You need to have `grip' installed in PATH environment"))
-    (grip-mode-kill-grip-process)))
+      (grip-mode-start-preview)
+    (grip-mode-stop-preview)))
 
 (provide 'grip-mode)
 

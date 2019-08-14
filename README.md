@@ -4,7 +4,7 @@
 [![MELPA Stable](https://stable.melpa.org/packages/grip-mode-badge.svg)](https://stable.melpa.org/#/grip-mode)
 [![License](http://img.shields.io/:license-gpl3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0.html)
 
-Instant Github-flavored Markdown preview using [grip](https://github.com/joeyespo/grip)
+Instant Github-flavored Markdown/Org preview using [grip](https://github.com/joeyespo/grip)
 (Github README Instant Preview).
 
 ## Prerequisite
@@ -34,7 +34,7 @@ From melpa, `M-x package-install RET grip-mode RET`.
          ("g" . grip-mode)))
 ```
 
-Run `M-x grip-mode` to preview the markdown file with the default browser.
+Run `M-x grip-mode` to preview the markdown and org file with the default browser.
 
 ## Customize
 
@@ -49,5 +49,10 @@ Run `M-x customize-group RET grip RET` or set the variables.
 
 ![grip-mode](https://user-images.githubusercontent.com/140797/62999172-28333480-bea0-11e9-86a3-10ef1be54c16.png
 "Preview with grip")
+
+## Limitations
+
+- Need to save the buffer before rendering and previewing.
+- After reverting the buffer, the grip process will be killed automatically.
 
 ## FAQ
