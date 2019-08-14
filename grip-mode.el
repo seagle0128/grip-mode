@@ -1,4 +1,4 @@
-;;; grip-mode.el --- Fast Github-flavored Markdown preview using grip.         -*- lexical-binding: t; -*-
+;;; grip-mode.el --- Github README Instant Preview for Emacs.         -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019 Vincent Zhang
 
@@ -29,12 +29,25 @@
 
 ;;; Commentary:
 
-;; Realtime Markdown previews for Emacs, with a grip subprocess.
+;; Instant Github-flavored Markdown preview using a grip subprocess.
+;;
+;; Install:
+;; From melpa, `M-x package-install RET grip-mode RET`.
+;; ;; Make a keybinding: `C-c C-c g'
+;; (define-key markdown-mode-command-map (kbd "g") #'grip-mode)
+;; ;; or start grip when opening a markdown file
+;; (add-hook 'markdown-mode-hook #'grip-mode)
+;; or
+;; (use-package grip-mode
+;;   :ensure t
+;;   :bind (:map markdown-mode-command-map
+;;          ("g" . grip-mode)))
+;; Run `M-x grip-mode` to preview the markdown file with the default browser.
 
 ;;; Code:
 
 (defgroup grip nil
-  "Fast Github-flavored Markdown preview using a grip subprocess."
+  "Github README Instant Preview for Emacs."
   :prefix "grip-"
   :group 'markdown)
 
