@@ -4,7 +4,8 @@
 [![MELPA Stable](https://stable.melpa.org/packages/grip-mode-badge.svg)](https://stable.melpa.org/#/grip-mode)
 [![License](http://img.shields.io/:license-gpl3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0.html)
 
-Github README Instant Preview ([grip](https://github.com/joeyespo/grip)) for Emacs.
+Instant Github-flavored Markdown preview using [grip](https://github.com/joeyespo/grip)
+(Github README Instant Preview).
 
 ## Prerequisite
 
@@ -16,10 +17,6 @@ Github README Instant Preview ([grip](https://github.com/joeyespo/grip)) for Ema
 ### Manual
 
 From melpa, `M-x package-install RET grip-mode RET`.
-
-Run `M-x grip-mode` to preview the markdown file with the default browser.
-
-Or
 
 ``` emacs-lisp
 ;; Make a keybinding: `C-c C-c g'
@@ -37,7 +34,7 @@ Or
          ("g" . grip-mode)))
 ```
 
-Or `M-x grip-mode` to preview in the browser.
+Run `M-x grip-mode` to preview the markdown file with the default browser.
 
 ## Customize
 

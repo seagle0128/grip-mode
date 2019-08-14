@@ -1,4 +1,4 @@
-;;; grip-mode.el --- Github README Instant Preview for Emacs.         -*- lexical-binding: t; -*-
+;;; grip-mode.el --- Instant Github-flavored Markdown preview using grip.        -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019 Vincent Zhang
 
@@ -6,7 +6,7 @@
 ;; Homepage: https://github.com/seagle0128/doom-modeline
 ;; Version: 1.0.0
 ;; Package-Requires: ((emacs "25.1"))
-;; Keywords: markdown, preview, live, grip
+;; Keywords: convenience, markdown, preview
 
 ;; This file is not part of GNU Emacs.
 
@@ -47,7 +47,7 @@
 ;;; Code:
 
 (defgroup grip nil
-  "Github README Instant Preview for Emacs."
+  "Instant Github-flavored Markdown preview using grip."
   :prefix "grip-"
   :group 'markdown)
 
