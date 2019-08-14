@@ -65,7 +65,7 @@
   "Port to the grip port.")
 
 (defun grip-mode-start-grip-process (&optional file)
-  "Render and preview with grip."
+  "Render and preview FILE with grip."
   (unless grip-process
     (unless grip-mode-binary-path
       (user-error "You need to have `grip' installed in PATH environment"))
