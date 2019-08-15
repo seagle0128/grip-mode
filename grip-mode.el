@@ -64,8 +64,11 @@
 (defvar-local grip-port 1088
   "Port to the grip port.")
 
-(defun grip-mode-start-grip-process (&optional file)
-  "Render and preview FILE with grip."
+(defvar-local grip-preview-file buffer-file-name
+  "The preview file for grip process.")
+
+(defun grip-mode-start-grip-process ()
+  "Render and preview with grip."
   (unless grip-process
     (unless grip-mode-binary-path
       (user-error "You need to have `grip' installed in PATH environment"))
@@ -80,7 +83,7 @@
                          (format " *grip-%d*" grip-port)
                          grip-mode-binary-path
                          "--browser"
-                         (or file buffer-file-name)
+                         grip-preview-file
                          (number-to-string grip-port)))))
 
 (defun grip-mode-kill-grip-process ()
@@ -89,7 +92,11 @@
     (delete-process grip-process)
     (message "Process `%s' killed" grip-process)
     (setq grip-process nil)
-    (setq grip-port 1088)))
+    (setq grip-port 1088)
+
+    ;; Delete temp file
+    (unless (string-equal grip-preview-file buffer-file-name)
+      (delete-file grip-preview-file))))
 
 (defun grip-mode-preview-md ()
   "Render and preview markdown with grip."
@@ -104,9 +111,9 @@
 
 (defun grip-mode-preview-org ()
   "Render and preview org with grip."
-  (grip-mode-start-grip-process
-   (concat (file-name-directory buffer-file-name)
-           (grip-mode-org-to-md)))
+  (setq grip-preview-file (concat (file-name-directory buffer-file-name)
+                                  (grip-mode-org-to-md)))
+  (grip-mode-start-grip-process)
   (add-hook 'after-save-hook #'grip-mode-org-to-md nil t)
   (add-hook 'after-revert-hook #'grip-mode-org-to-md nil t))
 
@@ -116,6 +123,7 @@
     (if (eq major-mode 'org-mode)
         (grip-mode-preview-org)
       (grip-mode-preview-md))
+    (add-hook 'kill-buffer-hook #'grip-mode-kill-grip-process nil t)
     (add-hook 'before-revert-hook #'grip-mode-kill-grip-process nil t)))
 
 (defun grip-mode-stop-preview ()
@@ -123,6 +131,7 @@
   (grip-mode-kill-grip-process)
   (remove-hook 'after-save-hook #'grip-mode-org-to-md t)
   (remove-hook 'after-revert-hook #'grip-mode-org-to-md t)
+  (remove-hook 'kill-buffer-hook #'grip-mode-kill-grip-process t)
   (remove-hook 'before-revert-hook #'grip-mode-kill-grip-process t))
 
 ;;;###autoload
