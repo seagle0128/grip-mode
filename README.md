@@ -21,20 +21,30 @@ From melpa, `M-x package-install RET grip-mode RET`.
 ``` emacs-lisp
 ;; Make a keybinding: `C-c C-c g'
 (define-key markdown-mode-command-map (kbd "g") #'grip-mode)
-;; or start grip when opening a markdown file
+
+;; Or start grip when opening a markdown/org file
 (add-hook 'markdown-mode-hook #'grip-mode)
+(add-hook 'org-mode-hook #'grip-mode)
 ```
 
 ### Use-package
 
 ``` emacs-lisp
+;; Use keybindings
 (use-package grip-mode
   :ensure t
   :bind (:map markdown-mode-command-map
          ("g" . grip-mode)))
+
+;; Or using hooks
+(use-package grip-mode
+  :ensure t
+  :hook ((markdown-mode org-mode) . grip-mode))
 ```
 
 Run `M-x grip-mode` to preview the markdown and org file with the default browser.
+
+Enjoy! :smile:
 
 ## Customize
 
