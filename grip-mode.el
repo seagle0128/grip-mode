@@ -1,4 +1,4 @@
-;;; grip-mode.el --- Instant Github-flavored Markdown/Org preview using grip.        -*- lexical-binding: t; -*-
+;;; grip-mode.el --- Instant GitHub-flavored Markdown/Org preview using grip.        -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019 Vincent Zhang
 
@@ -29,7 +29,7 @@
 
 ;;; Commentary:
 
-;; Instant Github-flavored Markdown/Org preview using a grip subprocess.
+;; Instant GitHub-flavored Markdown/Org preview using a grip subprocess.
 ;;
 ;; Install:
 ;; From melpa, `M-x package-install RET grip-mode RET`.
@@ -47,10 +47,10 @@
 ;;; Code:
 
 (defgroup grip nil
-  "Instant Github-flavored Markdown/Org preview using grip."
+  "Instant GitHub-flavored Markdown/Org preview using grip."
   :group 'markdown)
 
-(defcustom grip-binary-path (executable-find "grip")
+(defcustom grip-binary-path "grip"
   "Path to the grip binary."
   :type 'string
   :group 'grip)
@@ -69,7 +69,7 @@
 (defun grip-start-process ()
   "Render and preview with grip."
   (unless grip-process
-    (unless grip-binary-path
+    (unless (executable-find grip-binary-path)
       (user-error "You need to have `grip' installed in PATH environment"))
 
     ;; Generat random port
