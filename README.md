@@ -52,7 +52,7 @@ Run `M-x customize-group RET grip RET` or set the variables.
 
 ``` emacs-lisp
 ;; Path to the grip binary
-(setq grip-mode-binary-path (executable-find "grip"))
+(setq grip-binary-path "/path/to/grip")
 ```
 
 ## Screenshots
