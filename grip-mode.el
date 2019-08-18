@@ -117,6 +117,7 @@
 
 (defun grip-start-preview ()
   "Start rendering and previewing with grip."
+  (save-buffer)
   (when buffer-file-name
     (if (eq major-mode 'org-mode)
         (grip-preview-org)
