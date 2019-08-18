@@ -110,8 +110,7 @@
 
 (defun grip-preview-org ()
   "Render and preview org with grip."
-  (setq grip-preview-file (concat (file-name-directory buffer-file-name)
-                                  (grip-org-to-md)))
+  (setq grip-preview-file (expand-file-name (grip-org-to-md)))
   (grip-start-process)
   (add-hook 'after-save-hook #'grip-org-to-md nil t)
   (add-hook 'after-revert-hook #'grip-org-to-md nil t))
