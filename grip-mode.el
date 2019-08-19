@@ -63,7 +63,7 @@
 (defvar-local grip-port 1088
   "Port to the grip port.")
 
-(defvar-local grip-preview-file buffer-file-name
+(defvar-local grip-preview-file nil
   "The preview file for grip process.")
 
 (defun grip-start-process ()
@@ -77,13 +77,15 @@
       (setq grip-port (random 65535)))
 
     ;; Start a new grip process
-    (setq grip-process
-          (start-process (format "grip-%d" grip-port)
-                         (format " *grip-%d*" grip-port)
-                         grip-binary-path
-                         "--browser"
-                         grip-preview-file
-                         (number-to-string grip-port)))))
+    (when grip-preview-file
+      (setq grip-process
+            (start-process (format "grip-%d" grip-port)
+                           (format " *grip-%d*" grip-port)
+                           grip-binary-path
+                           "--browser"
+                           grip-preview-file
+                           (number-to-string grip-port)))))
+  (message (format "Preview %s on http://localhost:%d" buffer-file-name grip-port)))
 
 (defun grip-kill-process ()
   "Kill the grip process."
@@ -94,11 +96,13 @@
     (setq grip-port 1088)
 
     ;; Delete temp file
-    (unless (string-equal grip-preview-file buffer-file-name)
+    (when (and grip-preview-file
+               (not (string-equal grip-preview-file buffer-file-name)))
       (delete-file grip-preview-file))))
 
 (defun grip-preview-md ()
   "Render and preview markdown with grip."
+  (setq grip-preview-file buffer-file-name)
   (grip-start-process))
 
 (declare-function org-md-export-to-markdown 'ox-md)
