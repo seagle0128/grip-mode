@@ -60,7 +60,7 @@
 (defvar-local grip-process nil
   "Handle to the inferior grip process.")
 
-(defvar-local grip-port 1088
+(defvar-local grip-port 6418
   "Port to the grip port.")
 
 (defvar-local grip-preview-file nil
@@ -73,7 +73,7 @@
       (user-error "You need to have `grip' installed in PATH environment"))
 
     ;; Generat random port
-    (while (< grip-port 3000)
+    (while (< grip-port 6419)
       (setq grip-port (random 65535)))
 
     ;; Start a new grip process
@@ -94,7 +94,7 @@
     (delete-process grip-process)
     (message "Process `%s' killed" grip-process)
     (setq grip-process nil)
-    (setq grip-port 1088)
+    (setq grip-port 6418)
 
     ;; Delete temp file
     (when (and grip-preview-file
