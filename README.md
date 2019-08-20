@@ -53,6 +53,12 @@ Run `M-x customize-group RET grip RET` or set the variables.
 ``` emacs-lisp
 ;; Path to the grip binary
 (setq grip-binary-path "/path/to/grip")
+
+;; A GitHub username for API authentication
+(setq grip-github-user "")
+
+;; A GitHub password or auth token for API auth
+(setq grip-github-password "")
 ```
 
 ## Screenshots

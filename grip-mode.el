@@ -55,6 +55,16 @@
   :type 'string
   :group 'grip)
 
+(defcustom grip-github-user ""
+  "A GitHub username for API authentication."
+  :type 'string
+  :group 'grip)
+
+(defcustom grip-github-password ""
+  "A GitHub password or auth token for API auth."
+  :type 'string
+  :group 'grip)
+
 
 
 (defvar-local grip-process nil
@@ -83,6 +93,8 @@
                            (format " *grip-%d*" grip-port)
                            grip-binary-path
                            "--browser"
+                           (format "--user=%s" grip-github-user)
+                           (format "--pass=%s" grip-github-password)
                            (format "--title=%s - Grip" (buffer-name))
                            grip-preview-file
                            (number-to-string grip-port)))))
