@@ -115,8 +115,6 @@
 (declare-function org-md-export-to-markdown 'ox-md)
 (defun grip-org-to-md (&rest _)
   "Render org to markdown."
-  (widen)
-  (deactivate-mark)
   (org-md-export-to-markdown))
 
 (defun grip-preview-org ()
