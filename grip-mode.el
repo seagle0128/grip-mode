@@ -83,6 +83,7 @@
                            (format " *grip-%d*" grip-port)
                            grip-binary-path
                            "--browser"
+                           (format "--title=%s - Grip" (buffer-name))
                            grip-preview-file
                            (number-to-string grip-port)))))
   (message (format "Preview %s on http://localhost:%d" buffer-file-name grip-port)))
@@ -102,11 +103,12 @@
 
 (defun grip-preview-md ()
   "Render and preview markdown with grip."
-  (setq grip-preview-file buffer-file-name)
+  (setq grip-preview-file (concat buffer-file-name ".tmp"))
+  (grip-refresh)
   (grip-start-process))
 
 (declare-function org-md-export-to-markdown 'ox-md)
-(defun grip-org-to-md ()
+(defun grip-org-to-md (&rest _)
   "Render org to markdown."
   (widen)
   (deactivate-mark)
@@ -116,26 +118,29 @@
   "Render and preview org with grip."
   (setq grip-preview-file (expand-file-name (grip-org-to-md)))
   (grip-start-process)
-  (add-hook 'after-save-hook #'grip-org-to-md nil t)
-  (add-hook 'after-revert-hook #'grip-org-to-md nil t))
+  (add-hook 'after-change-functions #'grip-org-to-md nil t))
+
+(defun grip-refresh (&rest _)
+  "Update the `grip-preview-file'.
+The optional ARGS argument is needed as this function is added to the
+`after-change-functions' hook."
+  (write-region nil nil grip-preview-file))
 
 (defun grip-start-preview ()
   "Start rendering and previewing with grip."
-  (save-buffer)
   (when buffer-file-name
     (if (eq major-mode 'org-mode)
         (grip-preview-org)
       (grip-preview-md))
-    (add-hook 'kill-buffer-hook #'grip-kill-process nil t)
-    (add-hook 'before-revert-hook #'grip-kill-process nil t)))
+    (add-hook 'after-change-functions #'grip-refresh nil t)
+    (add-hook 'kill-buffer-hook #'grip-kill-process nil t)))
 
 (defun grip-stop-preview ()
   "Stop rendering and previewing with grip."
   (grip-kill-process)
-  (remove-hook 'after-save-hook #'grip-org-to-md t)
-  (remove-hook 'after-revert-hook #'grip-org-to-md t)
-  (remove-hook 'kill-buffer-hook #'grip-kill-process t)
-  (remove-hook 'before-revert-hook #'grip-kill-process t))
+  (remove-hook 'after-change-functions #'grip-org-to-md t)
+  (remove-hook 'after-change-functions #'grip-refresh t)
+  (remove-hook 'kill-buffer-hook #'grip-kill-process t))
 
 ;;;###autoload
 (define-minor-mode grip-mode

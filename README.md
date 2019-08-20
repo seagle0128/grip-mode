@@ -60,9 +60,4 @@ Run `M-x customize-group RET grip RET` or set the variables.
 ![grip-mode](https://user-images.githubusercontent.com/140797/62999172-28333480-bea0-11e9-86a3-10ef1be54c16.png
 "Preview with grip")
 
-## Limitations
-
-- Need to save the buffer before rendering and previewing.
-- After reverting the buffer, the grip process will be killed automatically.
-
 ## FAQ
