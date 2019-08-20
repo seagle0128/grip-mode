@@ -67,3 +67,10 @@ Run `M-x customize-group RET grip RET` or set the variables.
 "Preview with grip")
 
 ## FAQ
+
+1. How to resolve the issue: "GitHub Rate Limit Reached"?
+
+   You need to set your GitHub username to `grip-github-user`, then
+   [Creating a personal access token for the command
+   line](https://help.github.com/en/articles/creating-a-personal-access-token-for-the-command-line)
+   and set the new token to  `grip-github-password`.
