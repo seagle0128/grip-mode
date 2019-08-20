@@ -101,11 +101,16 @@
                (not (string-equal grip-preview-file buffer-file-name)))
       (delete-file grip-preview-file))))
 
+(defun grip-refresh-md (&rest _)
+  "Update the `grip-preview-file'."
+  (write-region nil nil grip-preview-file))
+
 (defun grip-preview-md ()
   "Render and preview markdown with grip."
   (setq grip-preview-file (concat buffer-file-name ".tmp"))
-  (grip-refresh)
-  (grip-start-process))
+  (grip-refresh-md)
+  (grip-start-process)
+  (add-hook 'after-change-functions #'grip-refresh-md nil t))
 
 (declare-function org-md-export-to-markdown 'ox-md)
 (defun grip-org-to-md (&rest _)
@@ -120,26 +125,19 @@
   (grip-start-process)
   (add-hook 'after-change-functions #'grip-org-to-md nil t))
 
-(defun grip-refresh (&rest _)
-  "Update the `grip-preview-file'.
-The optional ARGS argument is needed as this function is added to the
-`after-change-functions' hook."
-  (write-region nil nil grip-preview-file))
-
 (defun grip-start-preview ()
   "Start rendering and previewing with grip."
   (when buffer-file-name
     (if (eq major-mode 'org-mode)
         (grip-preview-org)
       (grip-preview-md))
-    (add-hook 'after-change-functions #'grip-refresh nil t)
     (add-hook 'kill-buffer-hook #'grip-kill-process nil t)))
 
 (defun grip-stop-preview ()
   "Stop rendering and previewing with grip."
   (grip-kill-process)
   (remove-hook 'after-change-functions #'grip-org-to-md t)
-  (remove-hook 'after-change-functions #'grip-refresh t)
+  (remove-hook 'after-change-functions #'grip-refresh-md t)
   (remove-hook 'kill-buffer-hook #'grip-kill-process t))
 
 ;;;###autoload
