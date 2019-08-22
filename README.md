@@ -5,7 +5,7 @@
 [![License](http://img.shields.io/:license-gpl3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0.html)
 
 <!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
-## Table of Contents
+**Table of Contents**
 
 - [grip-mode](#grip-mode)
     - [Prerequisite](#prerequisite)
