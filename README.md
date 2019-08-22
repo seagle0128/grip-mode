@@ -4,6 +4,20 @@
 [![MELPA Stable](https://stable.melpa.org/packages/grip-mode-badge.svg)](https://stable.melpa.org/#/grip-mode)
 [![License](http://img.shields.io/:license-gpl3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0.html)
 
+<!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
+## Table of Contents
+
+- [grip-mode](#grip-mode)
+    - [Prerequisite](#prerequisite)
+    - [Install](#install)
+        - [Manual](#manual)
+        - [Use-package](#use-package)
+    - [Customize](#customize)
+    - [Screenshots](#screenshots)
+    - [FAQ](#faq)
+
+<!-- markdown-toc end -->
+
 Instant Github-flavored Markdown/Org preview using [grip](https://github.com/joeyespo/grip)
 (Github README Instant Preview).
 
