@@ -36,7 +36,7 @@ From melpa, `M-x package-install RET grip-mode RET`.
 ;; Make a keybinding: `C-c C-c g'
 (define-key markdown-mode-command-map (kbd "g") #'grip-mode)
 
-;; Or start grip when opening a markdown/org file
+;; Or start grip when opening a markdown/org buffer
 (add-hook 'markdown-mode-hook #'grip-mode)
 (add-hook 'org-mode-hook #'grip-mode)
 ```
@@ -56,7 +56,7 @@ From melpa, `M-x package-install RET grip-mode RET`.
   :hook ((markdown-mode org-mode) . grip-mode))
 ```
 
-Run `M-x grip-mode` to preview the markdown and org file with the default browser.
+Run `M-x grip-mode` to preview the markdown and org buffer with the default browser.
 
 Enjoy! :smile:
 
