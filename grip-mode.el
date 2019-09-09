@@ -3,7 +3,7 @@
 ;; Copyright (C) 2019 Vincent Zhang
 
 ;; Author: Vincent Zhang <seagle0128@gmail.com>
-;; Homepage: https://github.com/seagle0128/doom-modeline
+;; Homepage: https://github.com/seagle0128/grip-mode
 ;; Version: 2.0.0
 ;; Package-Requires: ((emacs "24.4"))
 ;; Keywords: convenience, markdown, preview
@@ -48,11 +48,12 @@
 
 (defgroup grip nil
   "Instant GitHub-flavored Markdown/Org preview using grip."
-  :group 'markdown)
+  :group 'markdown
+  :link '(url-link :tag "Homepage" "https://github.com/seagle0128/grip-mode"))
 
 (defcustom grip-binary-path "grip"
   "Path to the grip binary."
-  :type 'string
+  :type 'file
   :group 'grip)
 
 (defcustom grip-github-user ""
