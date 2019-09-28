@@ -88,3 +88,15 @@ Run `M-x customize-group RET grip RET` or set the variables.
    [Creating a personal access token for the command
    line](https://help.github.com/en/articles/creating-a-personal-access-token-for-the-command-line)
    and set the new token to  `grip-github-password`.
+
+## Donate
+
+If you think it's helpful for you, please consider pay a cup of coffee for me. Thank you! :smile:
+
+<img
+src="https://user-images.githubusercontent.com/140797/65818854-44204900-e248-11e9-9cc5-3e6339587cd8.png"
+alt="Alipay" width="150"/>
+&nbsp;&nbsp;
+<img
+src="https://user-images.githubusercontent.com/140797/65818844-366ac380-e248-11e9-931c-4bd872d0566b.png"
+alt="Wechat" width="150"/>
