@@ -116,7 +116,7 @@
 
 (defun grip-refresh-md (&rest _)
   "Update the `grip-preview-file'."
-  (write-region nil nil grip-preview-file))
+  (write-region nil nil grip-preview-file nil 'quiet))
 
 (defun grip-preview-md ()
   "Render and preview markdown with grip."
