@@ -18,13 +18,13 @@
 
 <!-- markdown-toc end -->
 
-Instant Github-flavored Markdown/Org preview using [grip](https://github.com/joeyespo/grip)
-(Github README Instant Preview).
+Instant Github-flavored Markdown/Org preview using [Grip](https://github.com/joeyespo/grip)
+(GitHub Readme Instant Preview).
 
 ## Prerequisite
 
 - [Python](https://www.python.org/)
-- [grip](https://github.com/joeyespo/grip): `pip install grip`
+- [Grip](https://github.com/joeyespo/grip): `pip install grip`
 
 ## Install
 
