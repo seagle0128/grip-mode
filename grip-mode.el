@@ -4,7 +4,7 @@
 
 ;; Author: Vincent Zhang <seagle0128@gmail.com>
 ;; Homepage: https://github.com/seagle0128/grip-mode
-;; Version: 2.1.0
+;; Version: 2.1.1
 ;; Package-Requires: ((emacs "24.4"))
 ;; Keywords: convenience, markdown, preview
 
