@@ -151,6 +151,11 @@
   (remove-hook 'after-change-functions #'grip-refresh-md t)
   (remove-hook 'kill-buffer-hook #'grip-kill-process t))
 
+(defun grip-browse-preview ()
+  "Browse grip preivew."
+  (interactive)
+  (browse-url (format "http://localhost:%d" grip-port)))
+
 ;;;###autoload
 (define-minor-mode grip-mode
   "Live Markdown preview with grip."
