@@ -81,7 +81,8 @@
   "Render and preview with grip."
   (unless grip-process
     (unless (executable-find grip-binary-path)
-      (user-error "You need to have `grip' installed in PATH environment"))
+      (grip-mode -1)                    ; Force to disable
+      (error "You need to have `grip' installed in PATH environment"))
 
     ;; Generat random port
     (while (< grip-port 6419)
