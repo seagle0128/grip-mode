@@ -121,7 +121,8 @@
 
 (defun grip-preview-md ()
   "Render and preview markdown with grip."
-  (setq grip-preview-file (make-temp-file (buffer-name) nil ".tmp"))
+  (setq grip-preview-file
+        (make-temp-file (file-name-nondirectory buffer-file-name) nil ".tmp"))
   (grip-refresh-md)
   (grip-start-process)
   (add-hook 'after-change-functions #'grip-refresh-md nil t))
