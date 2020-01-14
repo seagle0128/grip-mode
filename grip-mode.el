@@ -76,6 +76,8 @@ option."
 
 
 
+(declare-function xwidget-webkit-current-session 'xwidget)
+
 (defvar-local grip--process nil
   "Handle to the inferior grip process.")
 
