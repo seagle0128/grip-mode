@@ -83,7 +83,7 @@ Run `M-x customize-group RET grip RET` or set the variables.
 ![browser](https://user-images.githubusercontent.com/140797/62999172-28333480-bea0-11e9-86a3-10ef1be54c16.png
 "Preview in browser")
 
-![xwidgets](https://user-images.githubusercontent.com/140797/72370773-e0118a00-373d-11ea-8030-fa14e3dba529.png
+![xwidgets](https://user-images.githubusercontent.com/140797/72371426-52369e80-373f-11ea-920a-5b6154852c57.png
 "Preview in xwidgets")
 
 
