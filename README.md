@@ -80,11 +80,11 @@ Run `M-x customize-group RET grip RET` or set the variables.
 
 ## Screenshots
 
-![browser](https://user-images.githubusercontent.com/140797/62999172-28333480-bea0-11e9-86a3-10ef1be54c16.png
+![default_browser](https://user-images.githubusercontent.com/140797/62999172-28333480-bea0-11e9-86a3-10ef1be54c16.png
 "Preview in browser")
 
-![xwidgets](https://user-images.githubusercontent.com/140797/72371426-52369e80-373f-11ea-920a-5b6154852c57.png
-"Preview in xwidgets")
+![xwidget_webkit](https://user-images.githubusercontent.com/140797/72371426-52369e80-373f-11ea-920a-5b6154852c57.png
+"Preview in embedded webkit")
 
 
 ## FAQ
