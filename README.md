@@ -74,7 +74,9 @@ Run `M-x customize-group RET grip RET` or set the variables.
 ;; A GitHub password or auth token for API auth
 (setq grip-github-password "")
 
-;; Use embedded webkit to preview
+;; Use embedded webkit to previe
+;; This requires GNU/Emacs version >= 26 and built with the `--with-xwidgets`
+;; option.
 (setq grip-preview-use-webkit t)
 ```
 

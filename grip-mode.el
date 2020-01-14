@@ -4,7 +4,7 @@
 
 ;; Author: Vincent Zhang <seagle0128@gmail.com>
 ;; Homepage: https://github.com/seagle0128/grip-mode
-;; Version: 2.2.0
+;; Version: 2.2.1
 ;; Package-Requires: ((emacs "24.4"))
 ;; Keywords: convenience, markdown, preview
 
@@ -67,19 +67,22 @@
   :group 'grip)
 
 (defcustom grip-preview-use-webkit t
-  "Use embedded webkit to preview."
+  "Use embedded webkit to preview.
+
+This requires GNU/Emacs version >= 26 and built with the `--with-xwidgets`
+option."
   :type 'boolean
   :group 'grip)
 
 
 
-(defvar-local grip-process nil
+(defvar-local grip--process nil
   "Handle to the inferior grip process.")
 
-(defvar-local grip-port 6418
+(defvar-local grip--port 6418
   "Port to the grip port.")
 
-(defvar-local grip-preview-file nil
+(defvar-local grip--preview-file nil
   "The preview file for grip process.")
 
 (defun grip--browse-url (url)
@@ -97,57 +100,57 @@ Use default browser unless `xwidget' is avaliable."
 
 (defun grip--preview-url ()
   "Return grip preview url."
-  (format "http://localhost:%d" grip-port))
+  (format "http://localhost:%d" grip--port))
 
 (defun grip-start-process ()
   "Render and preview with grip."
-  (unless (processp grip-process)
+  (unless (processp grip--process)
     (unless (executable-find grip-binary-path)
       (grip-mode -1)                    ; Force to disable
       (error "You need to have `grip' installed in PATH environment"))
 
     ;; Generat random port
-    (while (< grip-port 6419)
-      (setq grip-port (random 65535)))
+    (while (< grip--port 6419)
+      (setq grip--port (random 65535)))
 
     ;; Start a new grip process
-    (when grip-preview-file
-      (setq grip-process
-            (start-process (format "grip-%d" grip-port)
-                           (format " *grip-%d*" grip-port)
+    (when grip--preview-file
+      (setq grip--process
+            (start-process (format "grip-%d" grip--port)
+                           (format " *grip-%d*" grip--port)
                            grip-binary-path
                            (format "--user=%s" grip-github-user)
                            (format "--pass=%s" grip-github-password)
                            (format "--title=%s - Grip" (buffer-name))
-                           grip-preview-file
-                           (number-to-string grip-port)))
+                           grip--preview-file
+                           (number-to-string grip--port)))
 
       (message "Preview `%s' on %s" buffer-file-name (grip--preview-url))
       (sleep-for 1)               ; Ensure the server has started
       (grip--browse-url (grip--preview-url)))))
 
 (defun grip-kill-process ()
-  "Kill the grip process."
-  (when grip-process
-    (delete-process grip-process)
-    (message "Process `%s' killed" grip-process)
-    (setq grip-process nil)
-    (setq grip-port 6418)
+  "Kill grip process."
+  (when grip--process
+    (delete-process grip--process)
+    (message "Process `%s' killed" grip--process)
+    (setq grip--process nil)
+    (setq grip--port 6418)
 
     ;; Delete temp file
-    (when (and grip-preview-file
-               (not (string-equal grip-preview-file buffer-file-name)))
-      (delete-file grip-preview-file))))
+    (when (and grip--preview-file
+               (not (string-equal grip--preview-file buffer-file-name)))
+      (delete-file grip--preview-file))))
 
 (defun grip-refresh-md (&rest _)
-  "Update the `grip-preview-file'."
-  (when (and grip-preview-file
-             (file-writable-p grip-preview-file))
-    (write-region nil nil grip-preview-file nil 'quiet)))
+  "Update the `grip--preview-file'."
+  (when (and grip--preview-file
+             (file-writable-p grip--preview-file))
+    (write-region nil nil grip--preview-file nil 'quiet)))
 
 (defun grip-preview-md ()
   "Render and preview markdown with grip."
-  (setq grip-preview-file
+  (setq grip--preview-file
         (make-temp-file (file-name-nondirectory buffer-file-name) nil ".tmp"))
   (add-hook 'after-change-functions #'grip-refresh-md nil t)
   (add-hook 'after-save-hook #'grip-refresh-md nil t)
@@ -161,7 +164,7 @@ Use default browser unless `xwidget' is avaliable."
 
 (defun grip-preview-org ()
   "Render and preview org with grip."
-  (setq grip-preview-file (expand-file-name (grip-org-to-md)))
+  (setq grip--preview-file (expand-file-name (grip-org-to-md)))
   (add-hook 'after-change-functions #'grip-org-to-md nil t)
   (add-hook 'after-save-hook #'grip-org-to-md nil t)
   (grip-start-process))
