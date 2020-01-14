@@ -66,6 +66,11 @@
   :type 'string
   :group 'grip)
 
+(defcustom grip-preview-use-webkit t
+  "Use embedded webkit to preview."
+  :type 'boolean
+  :group 'grip)
+
 
 
 (defvar-local grip-process nil
@@ -77,9 +82,26 @@
 (defvar-local grip-preview-file nil
   "The preview file for grip process.")
 
+(defun grip--browse-url (url)
+  "Ask the browser to load URL.
+
+Use default browser unless `xwidget' is avaliable."
+  (if (and grip-preview-use-webkit
+           (featurep 'xwidget-internal))
+      (progn
+        (xwidget-webkit-browse-url url)
+        (let ((buf (xwidget-buffer (xwidget-webkit-current-session))))
+          (if (buffer-live-p buf)
+              (switch-to-buffer-other-window buf))))
+    (browse-url url)))
+
+(defun grip--preview-url ()
+  "Return grip preview url."
+  (format "http://localhost:%d" grip-port))
+
 (defun grip-start-process ()
   "Render and preview with grip."
-  (unless grip-process
+  (unless (processp grip-process)
     (unless (executable-find grip-binary-path)
       (grip-mode -1)                    ; Force to disable
       (error "You need to have `grip' installed in PATH environment"))
@@ -94,13 +116,15 @@
             (start-process (format "grip-%d" grip-port)
                            (format " *grip-%d*" grip-port)
                            grip-binary-path
-                           "--browser"
                            (format "--user=%s" grip-github-user)
                            (format "--pass=%s" grip-github-password)
                            (format "--title=%s - Grip" (buffer-name))
                            grip-preview-file
-                           (number-to-string grip-port)))))
-  (message (format "Preview %s on http://localhost:%d" buffer-file-name grip-port)))
+                           (number-to-string grip-port)))
+
+      (message "Preview `%s' on %s" buffer-file-name (grip--preview-url))
+      (sleep-for 1)               ; Ensure the server has started
+      (grip--browse-url (grip--preview-url)))))
 
 (defun grip-kill-process ()
   "Kill the grip process."
@@ -117,15 +141,18 @@
 
 (defun grip-refresh-md (&rest _)
   "Update the `grip-preview-file'."
-  (write-region nil nil grip-preview-file nil 'quiet))
+  (when (and grip-preview-file
+             (file-writable-p grip-preview-file))
+    (write-region nil nil grip-preview-file nil 'quiet)))
 
 (defun grip-preview-md ()
   "Render and preview markdown with grip."
   (setq grip-preview-file
         (make-temp-file (file-name-nondirectory buffer-file-name) nil ".tmp"))
+  (add-hook 'after-change-functions #'grip-refresh-md nil t)
+  (add-hook 'after-save-hook #'grip-refresh-md nil t)
   (grip-refresh-md)
-  (grip-start-process)
-  (add-hook 'after-change-functions #'grip-refresh-md nil t))
+  (grip-start-process))
 
 (declare-function org-md-export-to-markdown 'ox-md)
 (defun grip-org-to-md (&rest _)
@@ -135,8 +162,9 @@
 (defun grip-preview-org ()
   "Render and preview org with grip."
   (setq grip-preview-file (expand-file-name (grip-org-to-md)))
-  (grip-start-process)
-  (add-hook 'after-change-functions #'grip-org-to-md nil t))
+  (add-hook 'after-change-functions #'grip-org-to-md nil t)
+  (add-hook 'after-save-hook #'grip-org-to-md nil t)
+  (grip-start-process))
 
 (defun grip-start-preview ()
   "Start rendering and previewing with grip."
@@ -148,15 +176,17 @@
 
 (defun grip-stop-preview ()
   "Stop rendering and previewing with grip."
-  (grip-kill-process)
   (remove-hook 'after-change-functions #'grip-org-to-md t)
+  (remove-hook 'after-save-hook #'grip-refresh-md t)
   (remove-hook 'after-change-functions #'grip-refresh-md t)
-  (remove-hook 'kill-buffer-hook #'grip-kill-process t))
+  (remove-hook 'after-save-hook #'grip-refresh-md t)
+  (remove-hook 'kill-buffer-hook #'grip-kill-process t)
+  (grip-kill-process))
 
 (defun grip-browse-preview ()
-  "Browse grip preivew."
+  "Browse grip preview."
   (interactive)
-  (browse-url (format "http://localhost:%d" grip-port)))
+  (grip--browse-url (grip--preview-url)))
 
 ;;;###autoload
 (define-minor-mode grip-mode

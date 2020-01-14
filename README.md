@@ -73,12 +73,19 @@ Run `M-x customize-group RET grip RET` or set the variables.
 
 ;; A GitHub password or auth token for API auth
 (setq grip-github-password "")
+
+;; Use embedded webkit to preview
+(setq grip-preview-use-webkit t)
 ```
 
 ## Screenshots
 
-![grip-mode](https://user-images.githubusercontent.com/140797/62999172-28333480-bea0-11e9-86a3-10ef1be54c16.png
-"Preview with grip")
+![browser](https://user-images.githubusercontent.com/140797/62999172-28333480-bea0-11e9-86a3-10ef1be54c16.png
+"Preview in browser")
+
+![xwidgets](https://user-images.githubusercontent.com/140797/72370773-e0118a00-373d-11ea-8030-fa14e3dba529.png
+"Preview in xwidgets")
+
 
 ## FAQ
 
