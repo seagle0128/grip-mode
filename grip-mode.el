@@ -76,8 +76,6 @@ option."
 
 
 
-(declare-function xwidget-webkit-current-session 'xwidget)
-
 (defvar-local grip--process nil
   "Handle to the inferior grip process.")
 
@@ -87,6 +85,7 @@ option."
 (defvar-local grip--preview-file nil
   "The preview file for grip process.")
 
+(declare-function xwidget-webkit-current-session 'xwidget)
 (defun grip--browse-url (url)
   "Ask the browser to load URL.
 
@@ -109,7 +108,7 @@ Use default browser unless `xwidget' is avaliable."
   (unless (processp grip--process)
     (unless (executable-find grip-binary-path)
       (grip-mode -1)                    ; Force to disable
-      (error "You need to have `grip' installed in PATH environment"))
+      (user-error "The `grip' is not available in PATH environment"))
 
     ;; Generat random port
     (while (< grip--port 6419)
@@ -162,27 +161,32 @@ Use default browser unless `xwidget' is avaliable."
 (declare-function org-md-export-to-markdown 'ox-md)
 (defun grip-org-to-md (&rest _)
   "Render org to markdown."
-  (org-md-export-to-markdown))
+  (interactive)
+  (if (fboundp 'org-md-export-to-markdown)
+      (org-md-export-to-markdown)
+    (user-error "`ox-md' is not available")))
 
-(defun grip-preview-org ()
+(defun grip--preview-org ()
   "Render and preview org with grip."
-  (setq grip--preview-file (expand-file-name (grip-org-to-md)))
-  (add-hook 'after-change-functions #'grip-org-to-md nil t)
+  ;; (add-hook 'after-change-functions #'grip-org-to-md nil t)
   (add-hook 'after-save-hook #'grip-org-to-md nil t)
+  (setq grip--preview-file (expand-file-name (grip-org-to-md)))
   (grip-start-process))
 
 (defun grip-start-preview ()
   "Start rendering and previewing with grip."
+  (interactive)
   (when buffer-file-name
     (if (eq major-mode 'org-mode)
-        (grip-preview-org)
-      (grip-preview-md))
+        (grip--preview-org)
+      (grip--preview-md))
     (add-hook 'kill-buffer-hook #'grip-kill-process nil t)))
 
 (defun grip-stop-preview ()
   "Stop rendering and previewing with grip."
-  (remove-hook 'after-change-functions #'grip-org-to-md t)
-  (remove-hook 'after-save-hook #'grip-refresh-md t)
+  (interactive)
+  ;; (remove-hook 'after-change-functions #'grip-org-to-md t)
+  (remove-hook 'after-save-hook #'grip-org-to-md t)
   (remove-hook 'after-change-functions #'grip-refresh-md t)
   (remove-hook 'after-save-hook #'grip-refresh-md t)
   (remove-hook 'kill-buffer-hook #'grip-kill-process t)
