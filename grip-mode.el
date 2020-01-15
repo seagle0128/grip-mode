@@ -149,7 +149,7 @@ Use default browser unless `xwidget' is avaliable."
              (file-writable-p grip--preview-file))
     (write-region nil nil grip--preview-file nil 'quiet)))
 
-(defun grip-preview-md ()
+(defun grip--preview-md ()
   "Render and preview markdown with grip."
   (setq grip--preview-file
         (make-temp-file (file-name-nondirectory buffer-file-name) nil ".tmp"))
