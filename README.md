@@ -88,7 +88,6 @@ Run `M-x customize-group RET grip RET` or set the variables.
 ![xwidget_webkit](https://user-images.githubusercontent.com/140797/72371426-52369e80-373f-11ea-920a-5b6154852c57.png
 "Preview in embedded webkit")
 
-
 ## FAQ
 
 1. How to resolve the issue: "GitHub Rate Limit Reached"?

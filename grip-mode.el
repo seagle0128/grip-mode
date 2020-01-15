@@ -148,23 +148,23 @@ Use default browser unless `xwidget' is avaliable."
       (delete-file grip--preview-file))))
 
 (defun grip-refresh-md (&rest _)
-  "Update the `grip--preview-file'."
+  "Refresh the contents of `grip--preview-file'."
   (when (and grip--preview-file
              (file-writable-p grip--preview-file))
     (write-region nil nil grip--preview-file nil 'quiet)))
 
 (defun grip--preview-md ()
   "Render and preview markdown with grip."
-  (setq grip--preview-file
-        (make-temp-file (file-name-nondirectory buffer-file-name) nil ".tmp"))
   (add-hook 'after-change-functions #'grip-refresh-md nil t)
   (add-hook 'after-save-hook #'grip-refresh-md nil t)
+
+  (setq grip--preview-file
+        (make-temp-file (file-name-nondirectory buffer-file-name) nil ".tmp"))
   (grip-refresh-md)
   (grip-start-process))
 
 (defun grip-org-to-md (&rest _)
   "Render org to markdown."
-  (interactive)
   (if (fboundp 'org-md-export-to-markdown)
       (org-md-export-to-markdown)
     (user-error "`ox-md' is not available")))
@@ -173,6 +173,7 @@ Use default browser unless `xwidget' is avaliable."
   "Render and preview org with grip."
   ;; (add-hook 'after-change-functions #'grip-org-to-md nil t)
   (add-hook 'after-save-hook #'grip-org-to-md nil t)
+
   (setq grip--preview-file (expand-file-name (grip-org-to-md)))
   (grip-start-process))
 
@@ -188,11 +189,14 @@ Use default browser unless `xwidget' is avaliable."
 (defun grip-stop-preview ()
   "Stop rendering and previewing with grip."
   (interactive)
+  ;; Remove hooks
   ;; (remove-hook 'after-change-functions #'grip-org-to-md t)
   (remove-hook 'after-save-hook #'grip-org-to-md t)
   (remove-hook 'after-change-functions #'grip-refresh-md t)
   (remove-hook 'after-save-hook #'grip-refresh-md t)
   (remove-hook 'kill-buffer-hook #'grip-stop-preview t)
+
+  ;; Kill grip process
   (grip--kill-process))
 
 (defun grip-browse-preview ()
