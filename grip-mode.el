@@ -76,6 +76,10 @@ option."
 
 
 
+;; Externals
+(declare-function org-md-export-to-markdown 'ox-md)
+(declare-function xwidget-webkit-current-session 'xwidget)
+
 (defvar-local grip--process nil
   "Handle to the inferior grip process.")
 
@@ -85,7 +89,6 @@ option."
 (defvar-local grip--preview-file nil
   "The preview file for grip process.")
 
-(declare-function xwidget-webkit-current-session 'xwidget)
 (defun grip--browse-url (url)
   "Ask the browser to load URL.
 
@@ -130,7 +133,7 @@ Use default browser unless `xwidget' is avaliable."
       (sleep-for 1)               ; Ensure the server has started
       (grip--browse-url (grip--preview-url)))))
 
-(defun grip-kill-process ()
+(defun grip--kill-process ()
   "Kill grip process."
   (when grip--process
     (delete-process grip--process)
@@ -158,7 +161,6 @@ Use default browser unless `xwidget' is avaliable."
   (grip-refresh-md)
   (grip-start-process))
 
-(declare-function org-md-export-to-markdown 'ox-md)
 (defun grip-org-to-md (&rest _)
   "Render org to markdown."
   (interactive)
@@ -180,7 +182,7 @@ Use default browser unless `xwidget' is avaliable."
     (if (eq major-mode 'org-mode)
         (grip--preview-org)
       (grip--preview-md))
-    (add-hook 'kill-buffer-hook #'grip-kill-process nil t)))
+    (add-hook 'kill-buffer-hook #'grip-stop-preview nil t)))
 
 (defun grip-stop-preview ()
   "Stop rendering and previewing with grip."
@@ -189,8 +191,8 @@ Use default browser unless `xwidget' is avaliable."
   (remove-hook 'after-save-hook #'grip-org-to-md t)
   (remove-hook 'after-change-functions #'grip-refresh-md t)
   (remove-hook 'after-save-hook #'grip-refresh-md t)
-  (remove-hook 'kill-buffer-hook #'grip-kill-process t)
-  (grip-kill-process))
+  (remove-hook 'kill-buffer-hook #'grip-stop-preview t)
+  (grip--kill-process))
 
 (defun grip-browse-preview ()
   "Browse grip preview."
