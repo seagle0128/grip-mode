@@ -99,7 +99,8 @@ Use default browser unless `xwidget' is avaliable."
         (xwidget-webkit-browse-url url)
         (let ((buf (xwidget-buffer (xwidget-webkit-current-session))))
           (when (buffer-live-p buf)
-            (switch-to-buffer-other-window buf))))
+            (and (eq buf (current-buffer)) (quit-window))
+            (pop-to-buffer buf))))
     (browse-url url)))
 
 (defun grip--preview-url ()
