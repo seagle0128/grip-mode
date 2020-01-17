@@ -205,7 +205,9 @@ Use default browser unless `xwidget' is avaliable."
 (defun grip-browse-preview ()
   "Browse grip preview."
   (interactive)
-  (grip--browse-url (grip--preview-url)))
+  (if grip--process
+      (grip--browse-url (grip--preview-url))
+    (grip-start-preview)))
 
 ;;;###autoload
 (define-minor-mode grip-mode
