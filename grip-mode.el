@@ -202,6 +202,12 @@ Use default browser unless `xwidget' is avaliable."
   ;; Kill grip process
   (grip--kill-process))
 
+(defun grip-restart-preview ()
+  "Restart grip process to preview."
+  (interactive)
+  (grip-stop-preview)
+  (grip-start-preview))
+
 (defun grip-browse-preview ()
   "Browse grip preview."
   (interactive)
