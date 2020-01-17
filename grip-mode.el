@@ -77,7 +77,6 @@ option."
 
 
 ;; Externals
-(declare-function org-md-export-to-markdown 'ox-md)
 (declare-function xwidget-webkit-current-session 'xwidget)
 
 (defvar-local grip--process nil
@@ -165,9 +164,13 @@ Use default browser unless `xwidget' is avaliable."
 
 (defun grip-org-to-md (&rest _)
   "Render org to markdown."
-  (if (fboundp 'org-md-export-to-markdown)
-      (org-md-export-to-markdown)
-    (user-error "`ox-md' is not available")))
+  (cond
+   ((fboundp 'org-gfm-export-to-markdown)
+    (org-gfm-export-to-markdown))
+   ((fboundp 'org-md-export-to-markdown)
+    (org-md-export-to-markdown))
+   (t
+    (user-error "Unable to export org to markdown"))))
 
 (defun grip--preview-org ()
   "Render and preview org with grip."

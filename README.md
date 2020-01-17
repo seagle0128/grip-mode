@@ -56,7 +56,12 @@ From melpa, `M-x package-install RET grip-mode RET`.
   :hook ((markdown-mode org-mode) . grip-mode))
 ```
 
-Run `M-x grip-mode` to preview the markdown and org buffer with the default browser.
+Run `M-x grip-mode` to preview the markdown and org buffers in the embedded
+webkit browser if Emacs supports (built with `--with-xwidgets`), or in the
+default browser (Chrome, Firefox, etc.).
+
+[ox-gfm](https://github.com/larstvei/ox-gfm) is optional, but it brings better
+rendering for org files.
 
 Enjoy! :smile:
 
