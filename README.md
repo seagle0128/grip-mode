@@ -85,6 +85,18 @@ Run `M-x customize-group RET grip RET` or set the variables.
 (setq grip-preview-use-webkit t)
 ```
 
+If you don't set them you may have limitation to access Github APIs. Please
+refer to https://github.com/joeyespo/grip#access for details.
+
+You can get the user name and password from `~/.authinfo` like this.
+
+``` emacs-lisp
+(require 'auth-source)
+(let ((credential (auth-source-user-and-password "api.github.com")))
+  (setq grip-github-user (car credential)
+        grip-github-password (cadr credential)))
+```
+
 ## Screenshots
 
 ![default_browser](https://user-images.githubusercontent.com/140797/62999172-28333480-bea0-11e9-86a3-10ef1be54c16.png
