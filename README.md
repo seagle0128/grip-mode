@@ -86,7 +86,7 @@ Run `M-x customize-group RET grip RET` or set the variables.
 ```
 
 If you don't set them you may have limitation to access Github APIs. Please
-refer to https://github.com/joeyespo/grip#access for details.
+visit [Grip Access](https://github.com/joeyespo/grip#access) for details.
 
 You can get the user name and password from `~/.authinfo` like this.
 
@@ -104,6 +104,10 @@ You can get the user name and password from `~/.authinfo` like this.
 
 ![xwidget_webkit](https://user-images.githubusercontent.com/140797/72371426-52369e80-373f-11ea-920a-5b6154852c57.png
 "Preview in embedded webkit")
+
+## Limitations
+
+- Need to save to preview org buffers due to the performance trade-off.
 
 ## FAQ
 
