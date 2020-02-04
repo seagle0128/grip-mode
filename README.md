@@ -14,7 +14,9 @@
         - [Use-package](#use-package)
     - [Customize](#customize)
     - [Screenshots](#screenshots)
+    - [Limitations](#limitations)
     - [FAQ](#faq)
+    - [Donate](#donate)
 
 <!-- markdown-toc end -->
 
