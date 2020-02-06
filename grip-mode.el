@@ -66,6 +66,12 @@
   :type 'string
   :group 'grip)
 
+(defcustom grip-update-after-change t
+  "Update the grip review after every text change. When nil, only
+update the preview on file save."
+  :type 'boolean
+  :group 'grip)
+
 (defcustom grip-preview-use-webkit t
   "Use embedded webkit to preview.
 
@@ -154,7 +160,8 @@ Use default browser unless `xwidget' is avaliable."
 
 (defun grip--preview-md ()
   "Render and preview markdown with grip."
-  (add-hook 'after-change-functions #'grip-refresh-md nil t)
+  (when grip-update-after-change
+    (add-hook 'after-change-functions #'grip-refresh-md nil t))
   (add-hook 'after-save-hook #'grip-refresh-md nil t)
 
   (setq grip--preview-file
@@ -174,7 +181,8 @@ Use default browser unless `xwidget' is avaliable."
 
 (defun grip--preview-org ()
   "Render and preview org with grip."
-  ;; (add-hook 'after-change-functions #'grip-org-to-md nil t)
+  ;; (when grip-update-after-change
+  ;;   (add-hook 'after-change-functions #'grip-org-to-md nil t))
   (add-hook 'after-save-hook #'grip-org-to-md nil t)
 
   (setq grip--preview-file (expand-file-name (grip-org-to-md)))
