@@ -81,6 +81,10 @@ Run `M-x customize-group RET grip RET` or set the variables.
 ;; A GitHub password or auth token for API auth
 (setq grip-github-password "")
 
+;; When nil, update the preview after file saves only, instead of also
+;; after every text change
+(setq grip-update-after-change nil)
+
 ;; Use embedded webkit to previe
 ;; This requires GNU/Emacs version >= 26 and built with the `--with-xwidgets`
 ;; option.
