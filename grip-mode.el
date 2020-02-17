@@ -67,8 +67,9 @@
   :group 'grip)
 
 (defcustom grip-update-after-change t
-  "Update the grip review after every text change. When nil, only
-update the preview on file save."
+  "Update the grip review after every text change when non-nil.
+
+When nil, only update the preview on file save."
   :type 'boolean
   :group 'grip)
 
