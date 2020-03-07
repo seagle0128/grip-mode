@@ -1,5 +1,6 @@
 # grip-mode
 
+[![Build Status](https://travis-ci.org/seagle0128/grip-mode.svg?branch=master)](https://travis-ci.org/seagle0128/grip-mode)
 [![MELPA](https://melpa.org/packages/grip-mode-badge.svg)](https://melpa.org/#/grip-mode)
 [![MELPA Stable](https://stable.melpa.org/packages/grip-mode-badge.svg)](https://stable.melpa.org/#/grip-mode)
 [![License](http://img.shields.io/:license-gpl3-blue.svg)](LICENSE)

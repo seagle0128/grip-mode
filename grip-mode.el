@@ -98,7 +98,7 @@ option."
 (defun grip--browse-url (url)
   "Ask the browser to load URL.
 
-Use default browser unless `xwidget' is avaliable."
+Use default browser unless `xwidget' is available."
   (if (and grip-preview-use-webkit
            (featurep 'xwidget-internal))
       (progn
