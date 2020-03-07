@@ -84,6 +84,8 @@ option."
 
 
 ;; Externals
+(declare-function xwidget-buffer 'xwidget)
+(declare-function xwidget-webkit-browse-url 'xwidget)
 (declare-function xwidget-webkit-current-session 'xwidget)
 
 (defvar-local grip--process nil
