@@ -195,9 +195,13 @@ Use default browser unless `xwidget' is available."
   "Start rendering and previewing with grip."
   (interactive)
   (when buffer-file-name
-    (if (eq major-mode 'org-mode)
-        (grip--preview-org)
-      (grip--preview-md))
+    (cond ((derived-mode-p 'org-mode)
+           (grip--preview-org))
+          ((derived-mode-p 'markdown-mode)
+           (grip--preview-md))
+          (t
+           (grip-mode -1)
+           (user-error "`%s' not supported by grip preview" major-mode)))
     (add-hook 'kill-buffer-hook #'grip-stop-preview nil t)))
 
 (defun grip-stop-preview ()
