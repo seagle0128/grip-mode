@@ -167,8 +167,7 @@ Use default browser unless `xwidget' is available."
     (add-hook 'after-change-functions #'grip-refresh-md nil t))
   (add-hook 'after-save-hook #'grip-refresh-md nil t)
 
-  (setq grip--preview-file
-        (make-temp-file (file-name-nondirectory buffer-file-name) nil ".tmp"))
+  (setq grip--preview-file (concat buffer-file-name ".tmp"))
   (grip-refresh-md)
   (grip-start-process))
 
