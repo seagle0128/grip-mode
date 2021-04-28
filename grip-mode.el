@@ -87,6 +87,7 @@ option."
 (declare-function xwidget-buffer 'xwidget)
 (declare-function xwidget-webkit-browse-url 'xwidget)
 (declare-function xwidget-webkit-current-session 'xwidget)
+(declare-function xwidget-webkit-current-url 'xwidget)
 
 (defvar-local grip--process nil
   "Handle to the inferior grip process.")
@@ -145,12 +146,22 @@ Use default browser unless `xwidget' is available."
 (defun grip--kill-process ()
   "Kill grip process."
   (when grip--process
+    ;; Delete xwidget buffer
+    (when (and grip-preview-use-webkit
+               (featurep 'xwidget-internal)
+               (string-match-p (grip--preview-url) (xwidget-webkit-current-url)))
+      (let ((kill-buffer-query-functions nil)
+            (buf (xwidget-buffer (xwidget-webkit-current-session))))
+        (when (buffer-live-p buf)
+          (kill-buffer buf))))
+
+    ;; Delete process
     (delete-process grip--process)
     (message "Process `%s' killed" grip--process)
     (setq grip--process nil)
     (setq grip--port 6418)
 
-    ;; Delete temp file
+    ;; Delete preview temporary file
     (when (and grip--preview-file
                (not (string-equal grip--preview-file buffer-file-name)))
       (delete-file grip--preview-file))))
