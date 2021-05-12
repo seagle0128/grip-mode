@@ -76,6 +76,11 @@ Run `M-x customize-group RET grip RET` or set the variables.
 ;; Path to the grip binary
 (setq grip-binary-path "/path/to/grip")
 
+;; You can use this variable to define another browser
+;; to use when loading previews. By default this value is `nil`
+;; meaning use default browser defined by your system
+(setq grip-url-browser "custom_browser")
+
 ;; A GitHub username for API authentication
 (setq grip-github-user "")
 
