@@ -59,7 +59,7 @@
 (defcustom grip-url-browser nil
   "Browser to launch Markdown/Org previews.
 Use default browser if nil."
-  :type 'string
+  :type '(choice (const :tag "None" nil) string)
   :group 'grip)
 
 (defcustom grip-github-user ""
@@ -106,12 +106,10 @@ option."
 (defun grip--browser (url)
   "Use browser specified by user to load URL.
 Use default browser if nil."
-  (if grip-url-browser
-      (progn
-       (setq-local browse-url-generic-program grip-url-browser
-                   browse-url-browser-function 'browse-url-generic)
-       (browse-url url))
-  (browse-url url)))
+  (when grip-url-browser
+    (setq-local browse-url-generic-program grip-url-browser
+                browse-url-browser-function 'browse-url-generic))
+  (browse-url url))
 
 (defun grip--browse-url (url)
   "Ask the browser to load URL.
