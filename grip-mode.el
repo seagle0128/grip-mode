@@ -62,6 +62,10 @@ Use default browser if nil."
   :type '(choice (const :tag "None" nil) string)
   :group 'grip)
 
+(defcustom grip-url-args nil
+  "A list of strings defining options for `grip-url-browser'."
+  :type '(repeat (string :tag "Argument")))
+
 (defcustom grip-github-user ""
   "A GitHub username for API authentication."
   :type 'string
@@ -108,7 +112,9 @@ option."
 Use default browser if nil."
   (when grip-url-browser
     (setq-local browse-url-generic-program grip-url-browser
-                browse-url-browser-function 'browse-url-generic))
+                browse-url-browser-function 'browse-url-generic)
+    (when grip-url-args
+      (setq-local browse-url-generic-args grip-url-args)))
   (browse-url url))
 
 (defun grip--browse-url (url)
