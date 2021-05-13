@@ -81,6 +81,9 @@ Run `M-x customize-group RET grip RET` or set the variables.
 ;; meaning use default browser defined by your system
 (setq grip-url-browser "custom_browser")
 
+;; If you want to pass arguements to your custom browser then use
+(setq grip-url-args '("arg1" "arg2" "etc"))
+
 ;; A GitHub username for API authentication
 (setq grip-github-user "")
 
