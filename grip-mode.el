@@ -112,9 +112,9 @@ option."
 Use default browser if nil."
   (when grip-url-browser
     (setq-local browse-url-generic-program grip-url-browser
-                browse-url-browser-function 'browse-url-generic)
-    (when grip-url-args
-      (setq-local browse-url-generic-args grip-url-args)))
+                browse-url-browser-function 'browse-url-generic))
+  (when grip-url-args
+    (setq-local browse-url-generic-args grip-url-args))
   (browse-url url))
 
 (defun grip--browse-url (url)
