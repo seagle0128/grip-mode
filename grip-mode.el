@@ -149,6 +149,7 @@ Use default browser unless `xwidget' is available."
     ;; Delete xwidget buffer
     (when (and grip-preview-use-webkit
                (featurep 'xwidget-internal)
+               (xwidget-webkit-current-session)
                (string-match-p (grip--preview-url) (xwidget-webkit-current-url)))
       (let ((kill-buffer-query-functions nil)
             (buf (xwidget-buffer (xwidget-webkit-current-session))))
