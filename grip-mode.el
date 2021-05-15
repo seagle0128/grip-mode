@@ -56,6 +56,16 @@
   :type 'file
   :group 'grip)
 
+(defcustom grip-url-browser nil
+  "Browser to launch Markdown/Org previews.
+Use default browser if nil."
+  :type '(choice (const :tag "None" nil) string)
+  :group 'grip)
+
+(defcustom grip-url-args nil
+  "A list of strings defining options for `grip-url-browser'."
+  :type '(repeat (string :tag "Argument")))
+
 (defcustom grip-github-user ""
   "A GitHub username for API authentication."
   :type 'string
@@ -81,7 +91,6 @@ option."
   :type 'boolean
   :group 'grip)
 
-
 
 ;; Externals
 (declare-function xwidget-buffer 'xwidget)
@@ -98,6 +107,17 @@ option."
 (defvar-local grip--preview-file nil
   "The preview file for grip process.")
 
+(defun grip--browser (url)
+  "Use browser specified by user to load URL.
+Use default browser if nil."
+  (if grip-url-browser
+      (let ((browse-url-generic-program grip-url-browser)
+            (browse-url-generic-args grip-url-args))
+        (ignore browse-url-generic-program)
+        (ignore browse-url-generic-args)
+        (browse-url-generic url))
+    (browse-url url)))
+
 (defun grip--browse-url (url)
   "Ask the browser to load URL.
 
@@ -110,7 +130,7 @@ Use default browser unless `xwidget' is available."
           (when (buffer-live-p buf)
             (and (eq buf (current-buffer)) (quit-window))
             (pop-to-buffer buf))))
-    (browse-url url)))
+    (grip--browser url)))
 
 (defun grip--preview-url ()
   "Return grip preview url."
