@@ -110,12 +110,13 @@ option."
 (defun grip--browser (url)
   "Use browser specified by user to load URL.
 Use default browser if nil."
-  (when grip-url-browser
-    (setq-local browse-url-generic-program grip-url-browser
-                browse-url-browser-function 'browse-url-generic))
-  (when grip-url-args
-    (setq-local browse-url-generic-args grip-url-args))
-  (browse-url url))
+  (if grip-url-browser
+      (let ((browse-url-generic-program grip-url-browser)
+            (browse-url-generic-args grip-url-args))
+        (ignore browse-url-generic-program)
+        (ignore browse-url-generic-args)
+        (browse-url-generic url))
+    (browse-url url)))
 
 (defun grip--browse-url (url)
   "Ask the browser to load URL.
