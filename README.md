@@ -94,6 +94,9 @@ Run `M-x customize-group RET grip RET` or set the variables.
 ;; after every text change
 (setq grip-update-after-change nil)
 
+;; Preview hostname
+(setq grip-preview-host "localhost")
+
 ;; Use embedded webkit to previe
 ;; This requires GNU/Emacs version >= 26 and built with the `--with-xwidgets`
 ;; option.
