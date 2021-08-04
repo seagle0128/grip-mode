@@ -1,9 +1,10 @@
 # grip-mode
 
 [![Build Status](https://github.com/seagle0128/grip-mode/workflows/CI/badge.svg?branch=master)](https://github.com/seagle0128/grip-mode/actions)
+[![Release Tag](https://img.shields.io/github/tag/seagle0128/grip-mode.svg?label=releases)](https://github.com/seagle0128/grip-mode/releases)
+[![License](http://img.shields.io/:License-GPL3-blue.svg)](License)
 [![MELPA](https://melpa.org/packages/grip-mode-badge.svg)](https://melpa.org/#/grip-mode)
 [![MELPA Stable](https://stable.melpa.org/packages/grip-mode-badge.svg)](https://stable.melpa.org/#/grip-mode)
-[![License](http://img.shields.io/:license-gpl3-blue.svg)](LICENSE)
 
 <!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
 **Table of Contents**
