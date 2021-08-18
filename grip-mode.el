@@ -203,6 +203,7 @@ Use default browser unless `xwidget' is available."
   (when grip-update-after-change
     (add-hook 'after-change-functions #'grip-refresh-md nil t))
   (add-hook 'after-save-hook #'grip-refresh-md nil t)
+  (add-hook 'after-revert-hook #'grip-refresh-md nil t)
 
   (setq grip--preview-file (concat buffer-file-name ".tmp"))
   (grip-refresh-md)
@@ -223,6 +224,7 @@ Use default browser unless `xwidget' is available."
   ;; (when grip-update-after-change
   ;;   (add-hook 'after-change-functions #'grip-org-to-md nil t))
   (add-hook 'after-save-hook #'grip-org-to-md nil t)
+  (add-hook 'after-revert-hook #'grip-org-to-md nil t)
 
   (setq grip--preview-file (expand-file-name (grip-org-to-md)))
   (grip-start-process))
@@ -247,8 +249,10 @@ Use default browser unless `xwidget' is available."
   ;; Remove hooks
   ;; (remove-hook 'after-change-functions #'grip-org-to-md t)
   (remove-hook 'after-save-hook #'grip-org-to-md t)
+  (remove-hook 'after-revert-hook #'grip-org-to-md t)
   (remove-hook 'after-change-functions #'grip-refresh-md t)
   (remove-hook 'after-save-hook #'grip-refresh-md t)
+  (remove-hook 'after-revert-hook #'grip-refresh-md t)
   (remove-hook 'kill-buffer-hook #'grip-stop-preview t)
   (remove-hook 'kill-emacs-hook #'grip-stop-preview t)
 
