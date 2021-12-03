@@ -165,7 +165,7 @@ Use default browser unless `xwidget' is available."
                            (number-to-string grip--port)))
 
       (message "Preview `%s' on %s" buffer-file-name (grip--preview-url))
-      (sleep-for 1)               ; Ensure the server has started
+      (sleep-for 2)               ; Ensure the server has started
       (grip--browse-url (grip--preview-url)))))
 
 (defun grip--kill-process ()
