@@ -98,10 +98,10 @@ option."
 
 
 ;; Externals
-(declare-function xwidget-buffer 'xwidget)
-(declare-function xwidget-webkit-browse-url 'xwidget)
-(declare-function xwidget-webkit-current-session 'xwidget)
-(declare-function xwidget-webkit-current-url 'xwidget)
+(declare-function xwidget-buffer "xwidget")
+(declare-function xwidget-webkit-browse-url "xwidget")
+(declare-function xwidget-webkit-current-session "xwidget")
+(declare-function xwidget-webkit-current-url "xwidget")
 
 (defvar-local grip--process nil
   "Handle to the inferior grip process.")
@@ -129,7 +129,7 @@ Use default browser if nil."
 Use default browser unless `xwidget' is available."
   (if (and grip-preview-use-webkit
            (featurep 'xwidget-internal))
-      (progn
+      (save-selected-window
         (xwidget-webkit-browse-url url)
         (let ((buf (xwidget-buffer (xwidget-webkit-current-session))))
           (when (buffer-live-p buf)
