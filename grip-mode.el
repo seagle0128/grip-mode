@@ -56,7 +56,7 @@
   :type 'file
   :group 'grip)
 
-(defcustom grip-preview-use-webkit t
+(defcustom grip-preview-use-webkit (featurep 'xwidget-internal)
   "Use embedded webkit to preview.
 
 This requires GNU/Emacs version >= 26 and built with the `--with-xwidgets`
