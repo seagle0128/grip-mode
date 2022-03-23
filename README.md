@@ -77,9 +77,14 @@ Run `M-x customize-group RET grip RET` or set the variables.
 ;; Path to the grip binary
 (setq grip-binary-path "/path/to/grip")
 
+;; Use embedded webkit to preview
+;; This requires GNU/Emacs version >= 26 and built with the `--with-xwidgets` option.
+(setq grip-preview-use-webkit t)
+
 ;; You can use this variable to define another browser
 ;; to use when loading previews. By default this value is `nil`
-;; meaning use default browser defined by your system
+;; meaning use default browser defined by your system.
+;; It respects `grip-preview-use-webkit'.
 (setq grip-url-browser "custom_browser")
 
 ;; If you want to pass arguements to your custom browser then use
@@ -97,11 +102,6 @@ Run `M-x customize-group RET grip RET` or set the variables.
 
 ;; Preview hostname
 (setq grip-preview-host "localhost")
-
-;; Use embedded webkit to previe
-;; This requires GNU/Emacs version >= 26 and built with the `--with-xwidgets`
-;; option.
-(setq grip-preview-use-webkit t)
 ```
 
 If you don't set them you may have limitation to access Github APIs. Please

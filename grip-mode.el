@@ -56,9 +56,17 @@
   :type 'file
   :group 'grip)
 
+(defcustom grip-preview-use-webkit t
+  "Use embedded webkit to preview.
+
+This requires GNU/Emacs version >= 26 and built with the `--with-xwidgets`
+option."
+  :type 'boolean
+  :group 'grip)
+
 (defcustom grip-url-browser nil
   "Browser to launch Markdown/Org previews.
-Use default browser if nil."
+Use default browser if nil. It respects `grip-preview-use-webkit'."
   :type '(choice (const :tag "None" nil) string)
   :group 'grip)
 
@@ -88,14 +96,7 @@ When nil, only update the preview on file save."
   :type 'string
   :group 'grip)
 
-(defcustom grip-preview-use-webkit t
-  "Use embedded webkit to preview.
-
-This requires GNU/Emacs version >= 26 and built with the `--with-xwidgets`
-option."
-  :type 'boolean
-  :group 'grip)
-
+
 
 ;; Externals
 (declare-function xwidget-buffer "xwidget")
