@@ -74,6 +74,11 @@ Use default browser if nil. It respects `grip-preview-use-webkit'."
   "A list of strings defining options for `grip-url-browser'."
   :type '(repeat (string :tag "Argument")))
 
+(defcustom grip-github-api-url ""
+  "A base URL to another GitHub API."
+  :type 'string
+  :group 'grip)
+
 (defcustom grip-github-user ""
   "A GitHub username for API authentication."
   :type 'string
@@ -159,6 +164,7 @@ Use default browser unless `xwidget' is available."
             (start-process (format "grip-%d" grip--port)
                            (format " *grip-%d*" grip--port)
                            grip-binary-path
+                           (format "--api-url=%s" grip-github-api-url)
                            (format "--user=%s" grip-github-user)
                            (format "--pass=%s" grip-github-password)
                            (format "--title=%s - Grip" (buffer-name))
