@@ -90,6 +90,9 @@ Run `M-x customize-group RET grip RET` or set the variables.
 ;; If you want to pass arguements to your custom browser then use
 (setq grip-url-args '("arg1" "arg2" "etc"))
 
+;; A base URL to another GitHub API.
+(setq grip-github-api-url "")
+
 ;; A GitHub username for API authentication
 (setq grip-github-user "")
 
