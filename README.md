@@ -7,18 +7,19 @@
 [![MELPA Stable](https://stable.melpa.org/packages/grip-mode-badge.svg)](https://stable.melpa.org/#/grip-mode)
 
 <!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
-**Table of Contents**
+
+## Table of Contents
 
 - [grip-mode](#grip-mode)
-    - [Prerequisite](#prerequisite)
-    - [Install](#install)
-        - [Manual](#manual)
-        - [Use-package](#use-package)
-    - [Customize](#customize)
-    - [Screenshots](#screenshots)
-    - [Limitations](#limitations)
-    - [FAQ](#faq)
-    - [Donate](#donate)
+  - [Prerequisite](#prerequisite)
+  - [Install](#install)
+    - [Manual](#manual)
+    - [Use-package](#use-package)
+  - [Customize](#customize)
+  - [Screenshots](#screenshots)
+  - [Limitations](#limitations)
+  - [FAQ](#faq)
+  - [Donate](#donate)
 
 <!-- markdown-toc end -->
 
