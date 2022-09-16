@@ -10,16 +10,15 @@
 
 ## Table of Contents
 
-- [grip-mode](#grip-mode)
-  - [Prerequisite](#prerequisite)
-  - [Install](#install)
-    - [Manual](#manual)
-    - [Use-package](#use-package)
-  - [Customize](#customize)
-  - [Screenshots](#screenshots)
-  - [Limitations](#limitations)
-  - [FAQ](#faq)
-  - [Donate](#donate)
+- [Prerequisite](#prerequisite)
+- [Install](#install)
+  - [Manual](#manual)
+  - [Use-package](#use-package)
+- [Customize](#customize)
+- [Screenshots](#screenshots)
+- [Limitations](#limitations)
+- [FAQ](#faq)
+- [Donate](#donate)
 
 <!-- markdown-toc end -->
 
@@ -37,7 +36,7 @@ Instant Github-flavored Markdown/Org preview using [Grip](https://github.com/joe
 
 From melpa, `M-x package-install RET grip-mode RET`.
 
-``` emacs-lisp
+```emacs-lisp
 ;; Make a keybinding: `C-c C-c g'
 (define-key markdown-mode-command-map (kbd "g") #'grip-mode)
 
@@ -48,7 +47,7 @@ From melpa, `M-x package-install RET grip-mode RET`.
 
 ### Use-package
 
-``` emacs-lisp
+```emacs-lisp
 ;; Use keybindings
 (use-package grip-mode
   :ensure t
@@ -74,7 +73,7 @@ Enjoy! :smile:
 
 Run `M-x customize-group RET grip RET` or set the variables.
 
-``` emacs-lisp
+```emacs-lisp
 ;; Path to the grip binary
 (setq grip-binary-path "/path/to/grip")
 
@@ -113,7 +112,7 @@ visit [Grip Access](https://github.com/joeyespo/grip#access) for details.
 
 You can get the user name and password from `~/.authinfo` like this.
 
-``` emacs-lisp
+```emacs-lisp
 (require 'auth-source)
 (let ((credential (auth-source-user-and-password "api.github.com")))
   (setq grip-github-user (car credential)
@@ -122,11 +121,9 @@ You can get the user name and password from `~/.authinfo` like this.
 
 ## Screenshots
 
-![default_browser](https://user-images.githubusercontent.com/140797/62999172-28333480-bea0-11e9-86a3-10ef1be54c16.png
-"Preview in browser")
+![default_browser](https://user-images.githubusercontent.com/140797/62999172-28333480-bea0-11e9-86a3-10ef1be54c16.png "Preview in browser")
 
-![xwidget_webkit](https://user-images.githubusercontent.com/140797/72371426-52369e80-373f-11ea-920a-5b6154852c57.png
-"Preview in embedded webkit")
+![xwidget_webkit](https://user-images.githubusercontent.com/140797/72371426-52369e80-373f-11ea-920a-5b6154852c57.png "Preview in embedded webkit")
 
 ## Limitations
 
@@ -139,7 +136,7 @@ You can get the user name and password from `~/.authinfo` like this.
    You need to set your GitHub username to `grip-github-user`, then
    [Creating a personal access token for the command
    line](https://help.github.com/en/articles/creating-a-personal-access-token-for-the-command-line)
-   and set the new token to  `grip-github-password`.
+   and set the new token to `grip-github-password`.
 
 ## Donate
 
