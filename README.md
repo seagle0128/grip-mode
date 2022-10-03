@@ -105,6 +105,9 @@ Run `M-x customize-group RET grip RET` or set the variables.
 
 ;; Preview hostname
 (setq grip-preview-host "localhost")
+
+;; Sleep seconds to ensure the server starts
+(setq grip-sleep-time 2)
 ```
 
 If you don't set them you may have limitation to access Github APIs. Please

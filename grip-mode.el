@@ -101,6 +101,11 @@ When nil, only update the preview on file save."
   :type 'string
   :group 'grip)
 
+(defcustom grip-sleep-time 2
+  "Sleep seconds to ensure the server starts successfully."
+  :type 'integer
+  :group 'grip)
+
 
 
 ;; Externals
@@ -172,7 +177,7 @@ Use default browser unless `xwidget' is available."
                            (number-to-string grip--port)))
 
       (message "Preview `%s' on %s" buffer-file-name (grip--preview-url))
-      (sleep-for 2)               ; Ensure the server has started
+      (sleep-for grip-sleep-time) ; Ensure the server has started
       (grip--browse-url (grip--preview-url)))))
 
 (defun grip--kill-process ()
