@@ -13,10 +13,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        emacs-version: [24.5, 25.3, 26.3, 27.2, 28.2]
+        emacs-version: [25.3, 26.3, 27.2, 28.2]
         experimental: [false]
         include:
-          - emacs-version: snapshot
+          - emacs-version: [24.5, snapshot]
             experimental: true
 
     steps:
@@ -31,7 +31,7 @@ jobs:
 
       - uses: conao3/setup-cask@master
         with:
-          version: 0.8.8
+          version: 'snapshot'
 
       - name: install
         run: "cask install"
