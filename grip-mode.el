@@ -129,8 +129,6 @@ Use default browser if nil."
   (if grip-url-browser
       (let ((browse-url-generic-program grip-url-browser)
             (browse-url-generic-args grip-url-args))
-        (ignore browse-url-generic-program)
-        (ignore browse-url-generic-args)
         (browse-url-generic url))
     (browse-url url)))
 
