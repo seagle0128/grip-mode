@@ -16,8 +16,6 @@ jobs:
         emacs-version: [25.3, 26.3, 27.2, 28.2, 29.1]
         experimental: [false]
         include:
-          - emacs-version: 24.5
-            experimental: true
           - emacs-version: snapshot
             experimental: true
 
