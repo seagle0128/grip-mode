@@ -4,7 +4,7 @@
 
 ;; Author: Vincent Zhang <seagle0128@gmail.com>
 ;; Homepage: https://github.com/seagle0128/grip-mode
-;; Version: 2.3.3
+;; Version: 2.3.2
 ;; Package-Requires: ((emacs "24.4"))
 ;; Keywords: convenience, markdown, preview
 
@@ -165,15 +165,14 @@ Use default browser unless `xwidget' is available."
   (unless (processp grip--process)
     (if grip-use-mdopen
         (progn
-          (unless (and grip-mdopen-path (executable-find grip-mdopen-path))
+          (unless (executable-find grip-mdopen-path)
             (grip-mode -1)                    ; Force to disable
             (user-error "The `mdopen' is not available in PATH environment"))
           (when buffer-file-name
             (setq grip--process
                   (start-process "mdopen" "*mdopen*"
                                  grip-mdopen-path
-                                 buffer-file-name
-                                 ))
+                                 buffer-file-name))
             (message "Preview `%s' with mdopen" buffer-file-name)))
       (progn
         (unless (and grip-binary-path (executable-find grip-binary-path))
@@ -195,7 +194,7 @@ Use default browser unless `xwidget' is available."
                                grip--preview-file
                                (number-to-string grip--port)))
           (message "Preview `%s' on %s" buffer-file-name (grip--preview-url))
-          (sleep-for grip-sleep-time) ; Ensure the server has started
+          (sleep-for grip-sleep-time)
           (grip--browse-url (grip--preview-url)))))))
 
 (defun grip--kill-process ()
@@ -218,18 +217,7 @@ Use default browser unless `xwidget' is available."
     ;; Delete preview temporary file
     (when (and grip--preview-file
                (not (string-equal grip--preview-file buffer-file-name)))
-      (delete-file grip--preview-file)))
-
-    ;; Delete process
-    (delete-process grip--process)
-    (message "Process `%s' killed" grip--process)
-    (setq grip--process nil)
-    (setq grip--port 6418)
-
-    ;; Delete preview temporary file
-    (when (and grip--preview-file
-               (not (string-equal grip--preview-file buffer-file-name)))
-      (delete-file grip--preview-file)))
+      (delete-file grip--preview-file))))
 
 (defun grip-refresh-md (&rest _)
   "Refresh the contents of `grip--preview-file'."
