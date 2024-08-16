@@ -66,10 +66,10 @@
   :type 'boolean
   :group 'grip)
 
-(defcustom grip-preview-use-webkit (featurep 'xwidget-internal)
+(defcustom grip-preview-use-webkit t
   "Use embedded webkit to preview.
 
-This requires GNU/Emacs version >= 26 and built with the `--with-xwidgets`
+This requires Emacs GUI version >= 26 and built with the `--with-xwidgets`
 option."
   :type 'boolean
   :group 'grip)
