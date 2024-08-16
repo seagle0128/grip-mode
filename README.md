@@ -23,12 +23,15 @@
 <!-- markdown-toc end -->
 
 Instant Github-flavored Markdown/Org preview using [Grip](https://github.com/joeyespo/grip)
-(GitHub Readme Instant Preview).
+(GitHub Readme Instant Preview) or [mdopen](https://github.com/immanelg/mdopen).
 
 ## Prerequisite
 
 - [Python](https://www.python.org/)
 - [Grip](https://github.com/joeyespo/grip): `pip install grip`
+
+### Alternative markdown preview without accessing GitHub API
+- [mdopen](https://github.com/immanelg/mdopen): `cargo install mdopen`
 
 ## Install
 
@@ -51,12 +54,14 @@ From melpa, `M-x package-install RET grip-mode RET`.
 ;; Use keybindings
 (use-package grip-mode
   :ensure t
+  :config (setq grip-use-mdopen t) ;; to use `mdopen` instead of `grip`
   :bind (:map markdown-mode-command-map
          ("g" . grip-mode)))
 
 ;; Or using hooks
 (use-package grip-mode
   :ensure t
+  :config (setq grip-use-mdopen t) ;; to use `mdopen` instead of `grip`
   :hook ((markdown-mode org-mode) . grip-mode))
 ```
 
