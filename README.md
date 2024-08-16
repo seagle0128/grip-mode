@@ -65,6 +65,8 @@ From melpa, `M-x package-install RET grip-mode RET`.
   :hook ((markdown-mode org-mode) . grip-mode))
 ```
 
+⚠️ NOTE: `mdopen` opens `markdown` preview in default browser, and doesn't support emacs webkit preview. ⚠️
+
 Run `M-x grip-mode` to preview the markdown and org buffers in the embedded
 webkit browser if Emacs supports (built with `--with-xwidgets`), or in the
 default browser (Chrome, Firefox, etc.).
