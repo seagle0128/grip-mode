@@ -56,6 +56,16 @@
   :type 'file
   :group 'grip)
 
+(defcustom grip-mdopen-path "mdopen"
+  "Path to the mdopen binary."
+  :type 'file
+  :group 'grip)
+
+(defcustom grip-use-mdopen nil
+  "Use mdopen instead of grip if non-nil."
+  :type 'boolean
+  :group 'grip)
+
 (defcustom grip-preview-use-webkit (featurep 'xwidget-internal)
   "Use embedded webkit to preview.
 
@@ -137,6 +147,7 @@ Use default browser if nil."
 
 Use default browser unless `xwidget' is available."
   (if (and grip-preview-use-webkit
+           (display-graphic-p)
            (featurep 'xwidget-internal))
       (save-selected-window
         (xwidget-webkit-browse-url url)
@@ -150,22 +161,12 @@ Use default browser unless `xwidget' is available."
   "Return grip preview url."
   (format "http://%s:%d" grip-preview-host grip--port))
 
-(defcustom grip-mdopen-path "mdopen"
-  "Path to the mdopen binary."
-  :type 'file
-  :group 'grip)
-
-(defcustom grip-use-mdopen nil
-  "Use mdopen instead of grip if non-nil."
-  :type 'boolean
-  :group 'grip)
-
 (defun grip-start-process ()
   "Render and preview with grip or mdopen."
   (unless (processp grip--process)
     (if grip-use-mdopen
         (progn
-          (unless (executable-find grip-mdopen-path)
+          (unless (and grip-mdopen-path (executable-find grip-mdopen-path))
             (grip-mode -1)                    ; Force to disable
             (user-error "The `mdopen' is not available in PATH environment"))
           (when buffer-file-name
