@@ -169,12 +169,12 @@ Use default browser unless `xwidget' is available."
           (unless (and grip-mdopen-path (executable-find grip-mdopen-path))
             (grip-mode -1)                    ; Force to disable
             (user-error "The `mdopen' is not available in PATH environment"))
-          (when buffer-file-name
+          (when grip--preview-file
             (setq grip--process
                   (start-process "mdopen" "*mdopen*"
                                  grip-mdopen-path
-                                 buffer-file-name))
-            (message "Preview `%s' with mdopen" buffer-file-name)))
+                                 grip--preview-file))
+            (message "Preview `%s' on %s" buffer-file-name (grip--preview-url))))
       (progn
         (unless (and grip-binary-path (executable-find grip-binary-path))
           (grip-mode -1)                    ; Force to disable
