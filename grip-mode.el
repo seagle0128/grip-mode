@@ -233,7 +233,7 @@ Use default browser unless `xwidget' is available."
   (add-hook 'after-save-hook #'grip-refresh-md nil t)
   (add-hook 'after-revert-hook #'grip-refresh-md nil t)
 
-  (setq grip--preview-file (concat buffer-file-name ".tmp"))
+  (setq grip--preview-file (concat (file-name-sans-extension buffer-file-name) ".tmp.md"))
   (grip-refresh-md)
   (grip-start-process))
 
