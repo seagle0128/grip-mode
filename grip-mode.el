@@ -203,6 +203,7 @@ Use default browser unless `xwidget' is available."
   (when grip--process
     ;; Delete xwidget buffer
     (when (and grip-preview-use-webkit
+               (display-graphic-p)
                (featurep 'xwidget-internal)
                (xwidget-webkit-current-session)
                (string-match-p (grip--preview-url) (xwidget-webkit-current-url)))
