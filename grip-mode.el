@@ -266,7 +266,8 @@ Use default browser unless `xwidget' is available."
     (add-hook 'kill-emacs-hook #'grip-stop-preview nil t)
     (cond ((derived-mode-p 'org-mode)
            (grip--preview-org))
-          ((derived-mode-p 'markdown-mode)
+          ((or (derived-mode-p 'markdown-mode)
+               (derived-mode-p 'markdown-ts-mode))
            (grip--preview-md))
           (t
            (grip-mode -1)
