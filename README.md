@@ -23,7 +23,7 @@
 <!-- markdown-toc end -->
 
 Instant Github-flavored Markdown/Org preview using [Grip](https://github.com/joeyespo/grip)
-(GitHub Readme Instant Preview) or [mdopen](https://github.com/immanelg/mdopen).
+(GitHub Readme Instant Preview) or [mdopen](https://github.com/immanelg/mdopen) or [go-grip](https://github.com/chrishrb/go-grip).
 
 ## Prerequisite
 
@@ -32,6 +32,7 @@ Instant Github-flavored Markdown/Org preview using [Grip](https://github.com/joe
 
 ### Alternative markdown preview without accessing GitHub API
 - [mdopen](https://github.com/immanelg/mdopen): `cargo install mdopen`
+- [go-grip](https://github.com/chrishrb/go-grip): `go install github.com/chrishrb/go-grip@latest`
 
 ## Install
 
@@ -61,11 +62,13 @@ From melpa, `M-x package-install RET grip-mode RET`.
 ;; Or using hooks
 (use-package grip-mode
   :ensure t
-  :config (setq grip-use-mdopen t) ;; to use `mdopen` instead of `grip`
+  :config (setq grip-use-gogrip t) ;; to use `go-grip` instead of `grip`
   :hook ((markdown-mode org-mode) . grip-mode))
 ```
 
 ⚠️ NOTE: `mdopen` opens `markdown` preview in default browser, and doesn't support emacs webkit preview. ⚠️
+
+⚠️ NOTE: `go-grips` runs locally, does not use the github API, and supports emacs webkit preview. ⚠️
 
 Run `M-x grip-mode` to preview the markdown and org buffers in the embedded
 webkit browser if Emacs supports (built with `--with-xwidgets`), or in the
