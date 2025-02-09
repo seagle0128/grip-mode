@@ -66,6 +66,24 @@
   :type 'boolean
   :group 'grip)
 
+(defcustom grip-use-gogrip nil
+  "Use go-grip instead of grip if non-nil."
+  :type 'boolean
+  :group 'grip)
+
+(defcustom grip-gogrip-path "go-grip"
+  "Path to the go-grip binary."
+  :type 'file
+  :group 'grip)
+
+(defcustom grip-gogrip-theme "auto"
+  "Theme choice for go-grip."
+  :type '(choice
+          (const :tag "Automatic" "auto")
+          (const :tag "Dark" "dark")
+          (const :tag "Light" "light"))
+  :group 'grip)
+
 (defcustom grip-preview-use-webkit t
   "Use embedded webkit to preview.
 
@@ -159,47 +177,72 @@ Use default browser unless `xwidget' is available."
 
 (defun grip--preview-url ()
   "Return grip preview url."
-  (format "http://%s:%d" grip-preview-host grip--port))
+  (if grip-use-gogrip
+      (format "http://%s:%d/%s" grip-preview-host grip--port
+              (file-name-nondirectory grip--preview-file))
+    (format "http://%s:%d" grip-preview-host grip--port)))
 
 (defun grip-start-process ()
   "Render and preview with grip or mdopen."
   (unless (processp grip--process)
-    (if grip-use-mdopen
-        (progn
-          (unless (and grip-mdopen-path (executable-find grip-mdopen-path))
-            (grip-mode -1)                    ; Force to disable
-            (user-error "The `mdopen' is not available in PATH environment"))
-          (when grip--preview-file
-            (setq grip--process
-                  (start-process "mdopen" "*mdopen*"
-                                 grip-mdopen-path
-                                 grip--preview-file))
-            (message "Preview `%s' on %s" buffer-file-name (grip--preview-url))))
-      (progn
-        (unless (and grip-binary-path (executable-find grip-binary-path))
-          (grip-mode -1)                    ; Force to disable
-          (user-error "The `grip' is not available in PATH environment"))
-        ;; Generate random port
-        (while (< grip--port 6419)
-          (setq grip--port (random 65535)))
-        ;; Start a new grip process
-        (when grip--preview-file
-          (setq grip--process
-                (start-process (format "grip-%d" grip--port)
-                               (format " *grip-%d*" grip--port)
-                               grip-binary-path
-                               (format "--api-url=%s" grip-github-api-url)
-                               (format "--user=%s" grip-github-user)
-                               (format "--pass=%s" grip-github-password)
-                               (format "--title=%s - Grip" (buffer-name))
-                               grip--preview-file
-                               (number-to-string grip--port)))
-          (message "Preview `%s' on %s" buffer-file-name (grip--preview-url))
-          (sleep-for grip-sleep-time)
-          (grip--browse-url (grip--preview-url)))))))
+    (cond (grip-use-mdopen
+           (progn
+             (unless (and grip-mdopen-path (executable-find grip-mdopen-path))
+               (grip-mode -1)                    ; Force to disable
+               (user-error "The `mdopen' is not available in PATH environment"))
+             (when grip--preview-file
+               (setq grip--process
+                     (start-process "mdopen" "*mdopen*"
+                                    grip-mdopen-path
+                                    grip--preview-file))
+               (message "Preview `%s' on %s" buffer-file-name (grip--preview-url)))))
+          (grip-use-gogrip
+           (progn
+             (unless (and grip-gogrip-path (executable-find grip-gogrip-path))
+               (grip-mode -1)                    ; Force to disable
+               (user-error "The `go-grip' is not available in PATH environment"))
+             ;; Generate random port
+             (while (< grip--port 6419)
+               (setq grip--port (random 65535)))
+             ;; Start a new grip process
+             (when grip--preview-file
+               (setq grip--process
+                     (start-process (format "grip-%d" grip--port)
+                                    (format " *grip-%d*" grip--port)
+                                    grip-gogrip-path
+                                    (format "--port=%d" grip--port)
+                                    (format "--theme=%s" grip-gogrip-theme)
+                                    "--browser=false"
+                                    grip--preview-file))
+               (message "Preview `%s' on %s" buffer-file-name (grip--preview-url))
+               (sleep-for grip-sleep-time)
+               (grip--browse-url (grip--preview-url)))))
+          (t
+           (progn
+             (unless (and grip-binary-path (executable-find grip-binary-path))
+               (grip-mode -1)                    ; Force to disable
+               (user-error "The `grip' is not available in PATH environment"))
+             ;; Generate random port
+             (while (< grip--port 6419)
+               (setq grip--port (random 65535)))
+             ;; Start a new grip process
+             (when grip--preview-file
+               (setq grip--process
+                     (start-process (format "grip-%d" grip--port)
+                                    (format " *grip-%d*" grip--port)
+                                    grip-binary-path
+                                    (format "--api-url=%s" grip-github-api-url)
+                                    (format "--user=%s" grip-github-user)
+                                    (format "--pass=%s" grip-github-password)
+                                    (format "--title=%s - Grip" (buffer-name))
+                                    grip--preview-file
+                                    (number-to-string grip--port)))
+               (message "Preview `%s' on %s" buffer-file-name (grip--preview-url))
+               (sleep-for grip-sleep-time)
+               (grip--browse-url (grip--preview-url))))))))
 
 (defun grip--kill-process ()
-  "Kill grip or mdopen process."
+  "Kill grip or mdopen or go-grip process."
   (when grip--process
     ;; Delete xwidget buffer
     (when (and grip-preview-use-webkit
