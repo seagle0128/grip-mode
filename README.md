@@ -23,7 +23,7 @@
 <!-- markdown-toc end -->
 
 Instant Github-flavored Markdown/Org preview using [Grip](https://github.com/joeyespo/grip)
-(GitHub Readme Instant Preview) or [mdopen](https://github.com/immanelg/mdopen) or [go-grip](https://github.com/chrishrb/go-grip).
+(GitHub Readme Instant Preview), [mdopen](https://github.com/immanelg/mdopen) or [go-grip](https://github.com/chrishrb/go-grip).
 
 ## Prerequisite
 
@@ -55,14 +55,14 @@ From melpa, `M-x package-install RET grip-mode RET`.
 ;; Use keybindings
 (use-package grip-mode
   :ensure t
-  :config (setq grip-use-mdopen t) ;; to use `mdopen` instead of `grip`
+  :config (setq grip-command 'auto) ;; auto, grip, go-grip or mdopen
   :bind (:map markdown-mode-command-map
          ("g" . grip-mode)))
 
 ;; Or using hooks
 (use-package grip-mode
   :ensure t
-  :config (setq grip-use-gogrip t) ;; to use `go-grip` instead of `grip`
+  :config (setq grip-command 'go-grip) ;; auto, grip, go-grip or mdopen
   :hook ((markdown-mode org-mode) . grip-mode))
 ```
 
@@ -84,11 +84,12 @@ Enjoy! :smile:
 Run `M-x customize-group RET grip RET` or set the variables.
 
 ```emacs-lisp
-;; Path to the grip binary
-(setq grip-binary-path "/path/to/grip")
+;; Command: auto, grip, go-grip or mdopen
+(setq grip-command 'auto)
 
 ;; Use embedded webkit to preview
 ;; This requires GNU/Emacs version >= 26 and built with the `--with-xwidgets` option.
+;; mdopen doesn't support webkit preview.
 (setq grip-preview-use-webkit t)
 
 ;; You can use this variable to define another browser
@@ -101,20 +102,24 @@ Run `M-x customize-group RET grip RET` or set the variables.
 (setq grip-url-args '("arg1" "arg2" "etc"))
 
 ;; A base URL to another GitHub API.
+;; Only available for `grip'.
 (setq grip-github-api-url "")
 
 ;; A GitHub username for API authentication
+;; Only available for `grip'.
 (setq grip-github-user "")
 
 ;; A GitHub password or auth token for API auth
+;; Only available for `grip'.
 (setq grip-github-password "")
+
+;; Preview hostname
+;; Only available for `grip'.
+(setq grip-preview-host "localhost")
 
 ;; When nil, update the preview after file saves only, instead of also
 ;; after every text change
 (setq grip-update-after-change nil)
-
-;; Preview hostname
-(setq grip-preview-host "localhost")
 
 ;; Sleep seconds to ensure the server starts
 (setq grip-sleep-time 2)
