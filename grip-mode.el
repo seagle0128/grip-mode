@@ -60,8 +60,8 @@
           (const :tag "Mdopen" mdopen))
   :group 'grip)
 
-(defcustom grip-gogrip-theme 'auto
-  "Theme choice for go-grip."
+(defcustom grip-theme 'auto
+  "Theme choice."
   :type '(choice
           (const :tag "Automatic" auto)
           (const :tag "Dark" dark)
@@ -206,7 +206,7 @@ Use default browser unless `xwidget' is available."
                               (format " *grip-%d*" grip--port)
                               "go-grip"
                               (format "--port=%d" grip--port)
-                              (format "--theme=%s" grip-gogrip-theme)
+                              (format "--theme=%s" grip-theme)
                               "--browser=false"
                               grip--preview-file))
          (message "Preview `%s' on %s" buffer-file-name (grip--preview-url))

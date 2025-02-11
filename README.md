@@ -87,6 +87,9 @@ Run `M-x customize-group RET grip RET` or set the variables.
 ;; Command: auto, grip, go-grip or mdopen
 (setq grip-command 'auto)
 
+;; Theme choice
+(setq grip-theme 'auto)
+
 ;; Use embedded webkit to preview
 ;; This requires GNU/Emacs version >= 26 and built with the `--with-xwidgets` option.
 ;; mdopen doesn't support webkit preview.
