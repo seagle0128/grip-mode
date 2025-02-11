@@ -1,10 +1,10 @@
 ;;; grip-mode.el --- Instant GitHub-flavored Markdown/Org preview using grip.        -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2019-2024 Vincent Zhang
+;; Copyright (C) 2019-2025 Vincent Zhang
 
 ;; Author: Vincent Zhang <seagle0128@gmail.com>
 ;; Homepage: https://github.com/seagle0128/grip-mode
-;; Version: 2.3.3
+;; Version: 2.4.0
 ;; Package-Requires: ((emacs "24.4"))
 ;; Keywords: convenience, markdown, preview
 
@@ -163,14 +163,14 @@ Use default browser unless `xwidget' is available."
             (pop-to-buffer buf))))
     (grip--browser url)))
 
+(defvar grip--command nil)
 (defun grip--preview-url ()
   "Return grip preview url."
-  (if grip-use-gogrip
+  (if (eq grip--command 'go-grip)
       (format "http://%s:%d/%s" grip-preview-host grip--port
               (file-name-nondirectory grip--preview-file))
     (format "http://%s:%d" grip-preview-host grip--port)))
 
-(defvar grip--command nil)
 (defun grip-start-process ()
   "Render and preview."
   (unless (processp grip--process)
@@ -185,60 +185,56 @@ Use default browser unless `xwidget' is available."
 
     (pcase grip--command
       ('mdopen
-       (progn
-         (unless (executable-find "mdopen")
-           (grip-mode -1)                    ; Force to disable
-           (user-error "The `mdopen' is not available in PATH environment"))
-         (when grip--preview-file
-           (setq grip--process
-                 (start-process "grip" "*grip*" "mdopen" grip--preview-file))
-           (message "Preview `%s' on %s" buffer-file-name (grip--preview-url)))))
+       (unless (executable-find "mdopen")
+         (grip-mode -1)
+         (user-error "The `mdopen' is not available in PATH environment"))
+       (when grip--preview-file
+         (setq grip--process
+               (start-process "grip" "*grip*" "mdopen" grip--preview-file))
+         (message "Preview `%s' on %s" buffer-file-name (grip--preview-url))))
       ('go-grip
-       (progn
-         (unless (executable-find "go-grip")
-           (grip-mode -1)                    ; Force to disable
-           (user-error "The `go-grip' is not available in PATH environment"))
-         ;; Generate random port
-         (while (< grip--port 6419)
-           (setq grip--port (random 65535)))
-         ;; Start a new grip process
-         (when grip--preview-file
-           (setq grip--process
-                 (start-process (format "grip-%d" grip--port)
-                                (format " *grip-%d*" grip--port)
-                                "go-grip"
-                                (format "--port=%d" grip--port)
-                                (format "--theme=%s" grip-gogrip-theme)
-                                "--browser=false"
-                                grip--preview-file))
-           (message "Preview `%s' on %s" buffer-file-name (grip--preview-url))
-           (grip--browse-url (format "%s/%s"
-                                     (grip--preview-url)
-                                     (file-name-nondirectory grip--preview-file))))))
+       (unless (executable-find "go-grip")
+         (grip-mode -1)
+         (user-error "The `go-grip' is not available in PATH environment"))
+       ;; Generate random port
+       (while (< grip--port 6419)
+         (setq grip--port (random 65535)))
+       ;; Start a new grip process
+       (when grip--preview-file
+         (setq grip--process
+               (start-process (format "grip-%d" grip--port)
+                              (format " *grip-%d*" grip--port)
+                              "go-grip"
+                              (format "--port=%d" grip--port)
+                              (format "--theme=%s" grip-gogrip-theme)
+                              "--browser=false"
+                              grip--preview-file))
+         (message "Preview `%s' on %s" buffer-file-name (grip--preview-url))
+         (grip--browse-url (grip--preview-url))))
       ('grip
-       (progn
-         (unless (executable-find "grip")
-           (grip-mode -1)                    ; Force to disable
-           (user-error "The `grip' is not available in PATH environment"))
-         ;; Generate random port
-         (while (< grip--port 6419)
-           (setq grip--port (random 65535)))
-         ;; Start a new grip process
-         (when grip--preview-file
-           (setq grip--process
-                 (start-process (format "grip-%d" grip--port)
-                                (format " *grip-%d*" grip--port)
-                                "grip"
-                                (format "--api-url=%s" grip-github-api-url)
-                                (format "--user=%s" grip-github-user)
-                                (format "--pass=%s" grip-github-password)
-                                (format "--title=%s - Grip" (buffer-name))
-                                grip--preview-file
-                                (number-to-string grip--port)))
-           (message "Preview `%s' on %s" buffer-file-name (grip--preview-url))
-           (sleep-for grip-sleep-time)
-           (grip--browse-url (grip--preview-url)))))
+       (unless (executable-find "grip")
+         (grip-mode -1)
+         (user-error "The `grip' is not available in PATH environment"))
+       ;; Generate random port
+       (while (< grip--port 6419)
+         (setq grip--port (random 65535)))
+       ;; Start a new grip process
+       (when grip--preview-file
+         (setq grip--process
+               (start-process (format "grip-%d" grip--port)
+                              (format " *grip-%d*" grip--port)
+                              "grip"
+                              (format "--api-url=%s" grip-github-api-url)
+                              (format "--user=%s" grip-github-user)
+                              (format "--pass=%s" grip-github-password)
+                              (format "--title=%s - Grip" (buffer-name))
+                              grip--preview-file
+                              (number-to-string grip--port)))
+         (message "Preview `%s' on %s" buffer-file-name (grip--preview-url))
+         (sleep-for grip-sleep-time)
+         (grip--browse-url (grip--preview-url))))
       (_
+       (grip-mode -1)
        (user-error "No grip comamnd is available in PATH environment")))))
 
 (defun grip--kill-process ()
