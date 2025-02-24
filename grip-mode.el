@@ -208,6 +208,7 @@ Use default browser unless `xwidget' is available."
                               (format "--port=%d" grip--port)
                               (format "--theme=%s" grip-theme)
                               "--browser=false"
+                              "--bounding-box=false"
                               grip--preview-file))
          (message "Preview `%s' on %s" buffer-file-name (grip--preview-url))
          (grip--browse-url (grip--preview-url))))
@@ -235,7 +236,7 @@ Use default browser unless `xwidget' is available."
          (grip--browse-url (grip--preview-url))))
       (_
        (grip-mode -1)
-       (user-error "No grip comamnd is available in PATH environment")))))
+       (user-error "No grip command is available in PATH environment")))))
 
 (defun grip--kill-process ()
   "Kill the preview process."
