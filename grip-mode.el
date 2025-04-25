@@ -171,8 +171,8 @@ Use default browser unless `xwidget' is available."
     (when (eq grip--command 'auto)
       (setq grip--command
             (cond
-             ((executable-find "go-grip") 'go-grip)
              ((executable-find "mdopen") 'mdopen)
+             ((executable-find "go-grip") 'go-grip)
              ((executable-find "grip") 'grip)
              (t (user-error "No grip comamnd is available in PATH environment")))))
 
@@ -197,8 +197,11 @@ Use default browser unless `xwidget' is available."
                               (format "%s.md" (file-name-base grip--preview-file))))
 
          (when (process-live-p grip--process)
-           (message "Preview `%s' on %s" (abbreviate-file-name buffer-file-name) (grip--preview-url))
-           (grip--browse-url (grip--preview-url)))))
+           (grip--browse-url (grip--preview-url))
+           (message "%s: Preview `%s' on %s"
+                    grip--command
+                    (abbreviate-file-name buffer-file-name)
+                    (grip--preview-url)))))
       ('go-grip
        (unless (executable-find "go-grip")
          (grip-mode -1)
@@ -206,8 +209,8 @@ Use default browser unless `xwidget' is available."
 
        (when grip--preview-file
          (setq grip--process
-               (start-process (format "grip-%d" grip--port)
-                              (format " *grip-%d*" grip--port)
+               (start-process (format "go-grip-%d" grip--port)
+                              (format " *go-grip-%d*" grip--port)
                               "go-grip"
                               (format "--port=%d" grip--port)
                               (format "--theme=%s" grip-theme)
@@ -216,8 +219,11 @@ Use default browser unless `xwidget' is available."
                               (format "%s.md" (file-name-base grip--preview-file))))
 
          (when (process-live-p grip--process)
-           (message "Preview `%s' on %s" (abbreviate-file-name buffer-file-name) (grip--preview-url))
-           (grip--browse-url (grip--preview-url)))))
+           (grip--browse-url (grip--preview-url))
+           (message "%s: Preview `%s' on %s"
+                    grip--command
+                    (abbreviate-file-name buffer-file-name)
+                    (grip--preview-url)))))
       ('grip
        (unless (executable-find "grip")
          (grip-mode -1)
@@ -238,8 +244,11 @@ Use default browser unless `xwidget' is available."
          (sleep-for grip-sleep-time)
 
          (when (process-live-p grip--process)
-           (message "Preview `%s' on %s" (abbreviate-file-name buffer-file-name) (grip--preview-url))
-           (grip--browse-url (grip--preview-url)))))
+           (grip--browse-url (grip--preview-url))
+           (message "%s: Preview `%s' on %s"
+                    grip--command
+                    (abbreviate-file-name buffer-file-name)
+                    (grip--preview-url)))))
       (_
        (grip-mode -1)
        (user-error "No grip command is available in PATH environment")))))
