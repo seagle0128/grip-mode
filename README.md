@@ -1,6 +1,6 @@
 # grip-mode
 
-[![Build Status](https://github.com/seagle0128/grip-mode/workflows/CI/badge.svg?branch=master)](https://github.com/seagle0128/grip-mode/actions)
+[![CI](https://github.com/seagle0128/grip-mode/actions/workflows/ci.yml/badge.svg)](https://github.com/seagle0128/grip-mode/actions/workflows/ci.yml)
 [![Release Tag](https://img.shields.io/github/tag/seagle0128/grip-mode.svg?label=releases)](https://github.com/seagle0128/grip-mode/releases)
 [![License](http://img.shields.io/:License-GPL3-blue.svg)](License)
 [![MELPA](https://melpa.org/packages/grip-mode-badge.svg)](https://melpa.org/#/grip-mode)
