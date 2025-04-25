@@ -67,9 +67,7 @@ From melpa, `M-x package-install RET grip-mode RET`.
   :hook ((markdown-mode org-mode) . grip-mode))
 ```
 
-⚠️ NOTE: `mdopen` opens `markdown` preview in default browser, and doesn't support emacs webkit preview. ⚠️
-
-⚠️ NOTE: `go-grips` runs locally, does not use the github API, and supports emacs webkit preview. ⚠️
+⚠️ NOTE: `mdopen` and `go-grips` locally, does not use the github API, and supports emacs webkit preview. ⚠️
 
 Run `M-x grip-mode` to preview the markdown and org buffers in the embedded
 webkit browser if Emacs supports (built with `--with-xwidgets`), or in the
@@ -120,10 +118,6 @@ Run `M-x customize-group RET grip RET` or set the variables.
 ;; Preview hostname
 ;; Only available for `grip'.
 (setq grip-preview-host "localhost")
-
-;; When nil, update the preview after file saves only, instead of also
-;; after every text change
-(setq grip-update-after-change nil)
 
 ;; Sleep seconds to ensure the server starts
 (setq grip-sleep-time 2)

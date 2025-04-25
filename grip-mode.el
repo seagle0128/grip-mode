@@ -4,7 +4,7 @@
 
 ;; Author: Vincent Zhang <seagle0128@gmail.com>
 ;; Homepage: https://github.com/seagle0128/grip-mode
-;; Version: 2.4.1
+;; Version: 2.5.0
 ;; Package-Requires: ((emacs "24.4"))
 ;; Keywords: convenience, markdown, preview
 
@@ -86,7 +86,7 @@ Use default browser if nil. It respects `grip-preview-use-webkit'."
   "A list of strings defining options for `grip-url-browser'."
   :type '(repeat (string :tag "Argument")))
 
-(defcustom grip-github-api-url ""
+(defcustom grip-github-api-url "https://api.github.com"
   "A base URL to another GitHub API.
 Only available for `grip'."
   :type 'string
@@ -108,13 +108,6 @@ Only available for `grip'."
   "Preview hostname.
 Only available for `grip'."
   :type 'string
-  :group 'grip)
-
-(defcustom grip-update-after-change t
-  "Update the grip review after every text change when non-nil.
-
-When nil, only update the preview on file save."
-  :type 'boolean
   :group 'grip)
 
 (defcustom grip-sleep-time 2
@@ -166,14 +159,14 @@ Use default browser unless `xwidget' is available."
 (defvar grip--command nil)
 (defun grip--preview-url ()
   "Return grip preview url."
-  (if (eq grip--command 'go-grip)
-      (format "http://%s:%d/%s" grip-preview-host grip--port
-              (file-name-nondirectory grip--preview-file))
-    (format "http://%s:%d" grip-preview-host grip--port)))
+  (if (eq grip--command 'grip)
+      (format "http://%s:%d" grip-preview-host grip--port)
+    (format "http://%s:%d/%s" grip-preview-host grip--port
+            (file-name-nondirectory grip--preview-file))))
 
 (defun grip-start-process ()
   "Render and preview."
-  (unless (processp grip--process)
+  (unless (process-live-p grip--process)
     (setq grip--command grip-command)
     (when (eq grip--command 'auto)
       (setq grip--command
@@ -183,23 +176,34 @@ Use default browser unless `xwidget' is available."
              ((executable-find "grip") 'grip)
              (t (user-error "No grip comamnd is available in PATH environment")))))
 
+    ;; Generate random port
+    (while (< grip--port 6419)
+      (setq grip--port (random 65535)))
+
     (pcase grip--command
       ('mdopen
        (unless (executable-find "mdopen")
          (grip-mode -1)
          (user-error "The `mdopen' is not available in PATH environment"))
+
        (when grip--preview-file
          (setq grip--process
-               (start-process "grip" "*grip*" "mdopen" grip--preview-file))
-         (message "Preview `%s' on %s" buffer-file-name (grip--preview-url))))
+               (start-process (format "mdopen-%d" grip--port)
+                              (format " *mdopen-%d*" grip--port)
+                              "mdopen"
+                              (format "--port=%d" grip--port)
+                              "--browser="
+                              "--reload"
+                              (format "%s.md" (file-name-base grip--preview-file))))
+
+         (when (process-live-p grip--process)
+           (message "Preview `%s' on %s" (abbreviate-file-name buffer-file-name) (grip--preview-url))
+           (grip--browse-url (grip--preview-url)))))
       ('go-grip
        (unless (executable-find "go-grip")
          (grip-mode -1)
          (user-error "The `go-grip' is not available in PATH environment"))
-       ;; Generate random port
-       (while (< grip--port 6419)
-         (setq grip--port (random 65535)))
-       ;; Start a new grip process
+
        (when grip--preview-file
          (setq grip--process
                (start-process (format "grip-%d" grip--port)
@@ -209,17 +213,16 @@ Use default browser unless `xwidget' is available."
                               (format "--theme=%s" grip-theme)
                               "--browser=false"
                               "--bounding-box=false"
-                              grip--preview-file))
-         (message "Preview `%s' on %s" buffer-file-name (grip--preview-url))
-         (grip--browse-url (grip--preview-url))))
+                              (format "%s.md" (file-name-base grip--preview-file))))
+
+         (when (process-live-p grip--process)
+           (message "Preview `%s' on %s" (abbreviate-file-name buffer-file-name) (grip--preview-url))
+           (grip--browse-url (grip--preview-url)))))
       ('grip
        (unless (executable-find "grip")
          (grip-mode -1)
          (user-error "The `grip' is not available in PATH environment"))
-       ;; Generate random port
-       (while (< grip--port 6419)
-         (setq grip--port (random 65535)))
-       ;; Start a new grip process
+
        (when grip--preview-file
          (setq grip--process
                (start-process (format "grip-%d" grip--port)
@@ -228,12 +231,15 @@ Use default browser unless `xwidget' is available."
                               (format "--api-url=%s" grip-github-api-url)
                               (format "--user=%s" grip-github-user)
                               (format "--pass=%s" grip-github-password)
-                              (format "--title=%s - Grip" (buffer-name))
+                              (format "--title=%s - Grip" (file-name-nondirectory grip--preview-file))
                               grip--preview-file
                               (number-to-string grip--port)))
-         (message "Preview `%s' on %s" buffer-file-name (grip--preview-url))
+
          (sleep-for grip-sleep-time)
-         (grip--browse-url (grip--preview-url))))
+
+         (when (process-live-p grip--process)
+           (message "Preview `%s' on %s" (abbreviate-file-name buffer-file-name) (grip--preview-url))
+           (grip--browse-url (grip--preview-url)))))
       (_
        (grip-mode -1)
        (user-error "No grip command is available in PATH environment")))))
@@ -261,21 +267,9 @@ Use default browser unless `xwidget' is available."
                (not (string-equal grip--preview-file buffer-file-name)))
       (delete-file grip--preview-file))))
 
-(defun grip-refresh-md (&rest _)
-  "Refresh the contents of `grip--preview-file'."
-  (when (and grip--preview-file
-             (file-writable-p grip--preview-file))
-    (write-region nil nil grip--preview-file nil 'quiet)))
-
 (defun grip--preview-md ()
   "Render and preview markdown with grip."
-  (when grip-update-after-change
-    (add-hook 'after-change-functions #'grip-refresh-md nil t))
-  (add-hook 'after-save-hook #'grip-refresh-md nil t)
-  (add-hook 'after-revert-hook #'grip-refresh-md nil t)
-
-  (setq grip--preview-file (concat (file-name-sans-extension buffer-file-name) ".tmp.md"))
-  (grip-refresh-md)
+  (setq grip--preview-file buffer-file-name)
   (grip-start-process))
 
 (defun grip-org-to-md (&rest _)
@@ -290,8 +284,6 @@ Use default browser unless `xwidget' is available."
 
 (defun grip--preview-org ()
   "Render and preview org with grip."
-  ;; (when grip-update-after-change
-  ;;   (add-hook 'after-change-functions #'grip-org-to-md nil t))
   (add-hook 'after-save-hook #'grip-org-to-md nil t)
   (add-hook 'after-revert-hook #'grip-org-to-md nil t)
 
@@ -316,12 +308,8 @@ Use default browser unless `xwidget' is available."
   "Stop rendering and previewing with grip."
   (interactive)
   ;; Remove hooks
-  ;; (remove-hook 'after-change-functions #'grip-org-to-md t)
   (remove-hook 'after-save-hook #'grip-org-to-md t)
   (remove-hook 'after-revert-hook #'grip-org-to-md t)
-  (remove-hook 'after-change-functions #'grip-refresh-md t)
-  (remove-hook 'after-save-hook #'grip-refresh-md t)
-  (remove-hook 'after-revert-hook #'grip-refresh-md t)
   (remove-hook 'kill-buffer-hook #'grip-stop-preview t)
   (remove-hook 'kill-emacs-hook #'grip-stop-preview t)
 
@@ -337,7 +325,7 @@ Use default browser unless `xwidget' is available."
 (defun grip-browse-preview ()
   "Browse grip preview."
   (interactive)
-  (if grip--process
+  (if (process-live-p grip--process)
       (grip--browse-url (grip--preview-url))
     (grip-start-preview)))
 
