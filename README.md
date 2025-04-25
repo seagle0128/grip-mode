@@ -27,6 +27,7 @@ Instant Github-flavored Markdown/Org preview using [Grip](https://github.com/joe
 
 ## Prerequisite
 
+### Grip
 - [Python](https://www.python.org/)
 - [Grip](https://github.com/joeyespo/grip): `pip install grip`
 
