@@ -123,6 +123,9 @@ Only available for `grip'."
 (declare-function xwidget-webkit-current-session "xwidget")
 (declare-function xwidget-webkit-current-url "xwidget")
 
+(defvar browse-url-generic-args)
+(defvar browse-url-generic-program)
+
 (defvar-local grip--process nil
   "Handle to the inferior grip process.")
 
