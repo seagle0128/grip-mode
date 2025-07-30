@@ -177,7 +177,7 @@ Use default browser unless `xwidget' is available."
              ((executable-find "mdopen") 'mdopen)
              ((executable-find "go-grip") 'go-grip)
              ((executable-find "grip") 'grip)
-             (t (user-error "No grip comamnd is available in PATH environment")))))
+             (t (user-error "No grip command is available in PATH environment")))))
 
     ;; Generate random port
     (while (< grip--port 6419)
