@@ -60,14 +60,6 @@
           (const :tag "Mdopen" mdopen))
   :group 'grip)
 
-(defcustom grip-theme 'auto
-  "Theme choice."
-  :type '(choice
-          (const :tag "Automatic" auto)
-          (const :tag "Dark" dark)
-          (const :tag "Light" light))
-  :group 'grip)
-
 (defcustom grip-preview-use-webkit t
   "Use embedded webkit to preview.
 
@@ -214,8 +206,8 @@ Use default browser unless `xwidget' is available."
                     grip--command
                     (abbreviate-file-name buffer-file-name)
                     (grip--preview-url))))
-        ;; Support real-time refresh
-        (if grip-real-time-refresh (add-hook 'after-change-functions (function grip--refresh) nil t)))
+       ;; Support real-time refresh
+       (if grip-real-time-refresh (add-hook 'after-change-functions (function grip--refresh) nil t)))
       ('go-grip
        (unless (executable-find "go-grip")
          (grip-mode -1)
@@ -227,7 +219,6 @@ Use default browser unless `xwidget' is available."
                               (format " *go-grip-%d*" grip--port)
                               "go-grip"
                               (format "--port=%d" grip--port)
-                              (format "--theme=%s" grip-theme)
                               "--browser=false"
                               "--bounding-box=false"
                               (format "%s.md" (file-name-base grip--preview-file))))
@@ -289,15 +280,15 @@ Use default browser unless `xwidget' is available."
   ;; could be killed by other ways, process may not existed, hence
   ;; deleting the file is separating out for the clean-up process.
   (when (and grip--preview-file
-          (not (string-equal grip--preview-file buffer-file-name)))
+             (not (string-equal grip--preview-file buffer-file-name)))
     (delete-file grip--preview-file)))
 
 (defun grip--preview-md ()
   "Render and preview markdown with grip."
   (if grip-real-time-refresh
-   (progn
-     (setq grip--preview-file (concat buffer-file-name ".temp.md"))
-     (copy-file buffer-file-name grip--preview-file "overwrite"))
+      (progn
+        (setq grip--preview-file (concat buffer-file-name ".temp.md"))
+        (copy-file buffer-file-name grip--preview-file "overwrite"))
     (setq grip--preview-file buffer-file-name))
   (grip-start-process))
 
