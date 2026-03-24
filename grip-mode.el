@@ -186,6 +186,7 @@ Use default browser unless `xwidget' is available."
 (defun grip-start-process ()
   "Render and preview."
   (unless (process-live-p grip--process)
+    ;; Handle `grip-command'
     (setq grip--command grip-command)
     (when (eq grip--command 'auto)
       (setq grip--command
@@ -202,6 +203,7 @@ Use default browser unless `xwidget' is available."
       (setq grip--port (random 65535)))
 
     (when grip--preview-file
+      ;; Start preview process
       (pcase grip--command
         ('mdopen
          (unless (executable-find "mdopen")
@@ -249,6 +251,7 @@ Use default browser unless `xwidget' is available."
          (grip-mode -1)
          (user-error "No grip command is available in PATH environment")))
 
+      ;; Preview in browsers
       (grip--preview-1))))
 
 (defun grip--kill-process ()
