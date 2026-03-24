@@ -60,7 +60,7 @@
           (const :tag "Mdopen" mdopen))
   :group 'grip)
 
-(defcustom grip-preview-use-webkit t
+(defcustom grip-preview-in-webkit t
   "Use embedded webkit to preview.
 
 This requires Emacs GUI version >= 26 and built with the `--with-xwidgets`
@@ -70,7 +70,7 @@ option. mdopen doesn't support webkit preview."
 
 (defcustom grip-url-browser nil
   "Browser to launch Markdown/Org previews.
-Use default browser if nil. It respects `grip-preview-use-webkit'."
+Use default browser if nil. It respects `grip-preview-in-webkit'."
   :type '(choice (const :tag "None" nil) string)
   :group 'grip)
 
@@ -146,7 +146,7 @@ Use default browser if nil."
   "Ask the browser to load URL.
 
 Use default browser unless `xwidget' is available."
-  (if (and grip-preview-use-webkit
+  (if (and grip-preview-in-webkit
            (display-graphic-p)
            (featurep 'xwidget-internal))
       (save-selected-window
@@ -258,7 +258,7 @@ Use default browser unless `xwidget' is available."
   "Kill the preview process."
   (when grip--process
     ;; Delete xwidget buffer
-    (when (and grip-preview-use-webkit
+    (when (and grip-preview-in-webkit
                (display-graphic-p)
                (featurep 'xwidget-internal)
                (xwidget-webkit-current-session)

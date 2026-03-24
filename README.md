@@ -89,12 +89,12 @@ Run `M-x customize-group RET grip RET` or set the variables.
 ;; Use embedded webkit to preview
 ;; This requires GNU/Emacs version >= 26 and built with the `--with-xwidgets` option.
 ;; mdopen doesn't support webkit preview.
-(setq grip-preview-use-webkit t)
+(setq grip-preview-in-webkit t)
 
 ;; You can use this variable to define another browser
 ;; to use when loading previews. By default this value is `nil`
 ;; meaning use default browser defined by your system.
-;; It respects `grip-preview-use-webkit'.
+;; It respects `grip-preview-in-webkit'.
 (setq grip-url-browser "custom_browser")
 
 ;; If you want to pass arguements to your custom browser then use
