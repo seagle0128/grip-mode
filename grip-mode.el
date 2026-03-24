@@ -228,8 +228,7 @@ Use default browser unless `xwidget' is available."
                               (format "--port=%d" grip--port)
                               "--browser=false"
                               "--bounding-box=false"
-                              (format "%s.md" (file-name-base grip--preview-file))))
-         (grip--preview-1))
+                              (format "%s.md" (file-name-base grip--preview-file)))))
         ('grip
          (unless (executable-find "grip")
            (grip-mode -1)
