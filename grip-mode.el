@@ -164,9 +164,23 @@ Use default browser unless `xwidget' is available."
     (format "http://%s:%d/%s" grip-preview-host grip--port
             (file-name-nondirectory grip--preview-file))))
 
-(defun grip--refresh (&rest args)
+(defun grip--refresh (&rest _)
   "Save into the temp file to trigger refresh."
   (write-region (point-min) (point-max) grip--preview-file nil 'quiet))
+
+(defun grip--preview-1 ()
+  "Preview in the embedded or external browser."
+  (when (process-live-p grip--process)
+    (let ((url (grip--preview-url)))
+      (grip--browse-url url)
+      (message "%s: Preview `%s' on %s"
+               grip--command
+               (abbreviate-file-name buffer-file-name)
+               url))
+
+    ;; Support real-time refresh
+    (if grip-real-time-refresh
+        (add-hook 'after-change-functions #'grip--refresh nil t))))
 
 (defun grip-start-process ()
   "Render and preview."
@@ -178,19 +192,21 @@ Use default browser unless `xwidget' is available."
              ((executable-find "mdopen") 'mdopen)
              ((executable-find "go-grip") 'go-grip)
              ((executable-find "grip") 'grip)
-             (t (user-error "No grip command is available in PATH environment")))))
+             (t
+              (grip-mode -1)
+              (user-error "No grip command is available in PATH environment")))))
 
     ;; Generate random port
     (while (< grip--port 6419)
       (setq grip--port (random 65535)))
 
-    (pcase grip--command
-      ('mdopen
-       (unless (executable-find "mdopen")
-         (grip-mode -1)
-         (user-error "The `mdopen' is not available in PATH environment"))
+    (when grip--preview-file
+      (pcase grip--command
+        ('mdopen
+         (unless (executable-find "mdopen")
+           (grip-mode -1)
+           (user-error "The `mdopen' is not available in PATH environment"))
 
-       (when grip--preview-file
          (setq grip--process
                (start-process (format "mdopen-%d" grip--port)
                               (format " *mdopen-%d*" grip--port)
@@ -198,22 +214,12 @@ Use default browser unless `xwidget' is available."
                               (format "--port=%d" grip--port)
                               "--browser="
                               "--reload"
-                              (format "%s.md" (file-name-base grip--preview-file))))
+                              (format "%s.md" (file-name-base grip--preview-file)))))
+        ('go-grip
+         (unless (executable-find "go-grip")
+           (grip-mode -1)
+           (user-error "The `go-grip' is not available in PATH environment"))
 
-         (when (process-live-p grip--process)
-           (grip--browse-url (grip--preview-url))
-           (message "%s: Preview `%s' on %s"
-                    grip--command
-                    (abbreviate-file-name buffer-file-name)
-                    (grip--preview-url))))
-       ;; Support real-time refresh
-       (if grip-real-time-refresh (add-hook 'after-change-functions (function grip--refresh) nil t)))
-      ('go-grip
-       (unless (executable-find "go-grip")
-         (grip-mode -1)
-         (user-error "The `go-grip' is not available in PATH environment"))
-
-       (when grip--preview-file
          (setq grip--process
                (start-process (format "go-grip-%d" grip--port)
                               (format " *go-grip-%d*" grip--port)
@@ -222,19 +228,12 @@ Use default browser unless `xwidget' is available."
                               "--browser=false"
                               "--bounding-box=false"
                               (format "%s.md" (file-name-base grip--preview-file))))
+         (grip--preview-1))
+        ('grip
+         (unless (executable-find "grip")
+           (grip-mode -1)
+           (user-error "The `grip' is not available in PATH environment"))
 
-         (when (process-live-p grip--process)
-           (grip--browse-url (grip--preview-url))
-           (message "%s: Preview `%s' on %s"
-                    grip--command
-                    (abbreviate-file-name buffer-file-name)
-                    (grip--preview-url)))))
-      ('grip
-       (unless (executable-find "grip")
-         (grip-mode -1)
-         (user-error "The `grip' is not available in PATH environment"))
-
-       (when grip--preview-file
          (setq grip--process
                (start-process (format "grip-%d" grip--port)
                               (format " *grip-%d*" grip--port)
@@ -245,18 +244,12 @@ Use default browser unless `xwidget' is available."
                               (format "--title=%s - Grip" (file-name-nondirectory grip--preview-file))
                               grip--preview-file
                               (number-to-string grip--port)))
+         (sleep-for grip-sleep-time))
+        (_
+         (grip-mode -1)
+         (user-error "No grip command is available in PATH environment")))
 
-         (sleep-for grip-sleep-time)
-
-         (when (process-live-p grip--process)
-           (grip--browse-url (grip--preview-url))
-           (message "%s: Preview `%s' on %s"
-                    grip--command
-                    (abbreviate-file-name buffer-file-name)
-                    (grip--preview-url)))))
-      (_
-       (grip-mode -1)
-       (user-error "No grip command is available in PATH environment")))))
+      (grip--preview-1))))
 
 (defun grip--kill-process ()
   "Kill the preview process."
@@ -332,6 +325,7 @@ Use default browser unless `xwidget' is available."
   (remove-hook 'after-revert-hook #'grip-org-to-md t)
   (remove-hook 'kill-buffer-hook #'grip-stop-preview t)
   (remove-hook 'kill-emacs-hook #'grip-stop-preview t)
+  (remove-hook 'after-change-functions #'grip--refresh t)
 
   ;; Kill grip process
   (grip--kill-process))
