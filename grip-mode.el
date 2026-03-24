@@ -1,6 +1,6 @@
 ;;; grip-mode.el --- Instant GitHub-flavored Markdown/Org preview using grip.        -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2019-2025 Vincent Zhang
+;; Copyright (C) 2019-2026 Vincent Zhang
 
 ;; Author: Vincent Zhang <seagle0128@gmail.com>
 ;; Homepage: https://github.com/seagle0128/grip-mode
@@ -108,7 +108,8 @@ Only available for `grip'."
   :group 'grip)
 
 (defcustom grip-real-time-refresh nil
-  "Boolean value to allow real time refresh without saving the file. Support for markdown file only."
+  "Boolean value to allow real time refresh without saving file.
+Support for markdown file only."
   :type 'boolean
   :group 'grip)
 
