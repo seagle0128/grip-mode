@@ -32,7 +32,7 @@ Instant Github-flavored Markdown/Org preview using [Grip](https://github.com/joe
 - [Grip](https://github.com/joeyespo/grip): `pip install grip`
 
 ### Alternative markdown preview without accessing GitHub API
-- [mdopen](https://github.com/immanelg/mdopen): `cargo install mdopen`
+- [mdopen](https://github.com/immanelg/mdopen) (`>=0.6.0` for `grip-theme` support): `cargo install mdopen`
 - [go-grip](https://github.com/chrishrb/go-grip): `go install github.com/chrishrb/go-grip@latest`
 
 ## Install
