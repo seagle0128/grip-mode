@@ -215,6 +215,7 @@ Use default browser unless `xwidget' is available."
                               (format " *mdopen-%d*" grip--port)
                               "mdopen"
                               (format "--port=%d" grip--port)
+                              (format "--theme=%s" grip-theme)
                               "--browser="
                               "--reload"
                               (format "%s.md" (file-name-base grip--preview-file)))))
