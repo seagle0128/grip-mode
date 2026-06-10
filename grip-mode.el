@@ -97,8 +97,7 @@ Only available for `grip'."
   :group 'grip)
 
 (defcustom grip-preview-host "127.0.0.1"
-  "Preview hostname.
-Only available for `grip'."
+  "Preview hostname."
   :type 'string
   :group 'grip)
 
