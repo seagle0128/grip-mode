@@ -144,6 +144,9 @@ You can get the user name and password from `~/.authinfo` like this.
 ## Limitations
 
 - Need to save to preview org buffers due to the performance trade-off.
+- TRAMP files are previewed from a local temporary copy. Changes are staged on
+  save (or in real time when `grip-real-time-refresh` is enabled); relative
+  resources from the remote directory are not copied alongside the preview.
 
 ## FAQ
 

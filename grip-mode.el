@@ -177,6 +177,17 @@ Use default browser unless `xwidget' is available."
   "Save into the temp file to trigger refresh."
   (write-region (point-min) (point-max) grip--preview-file nil 'quiet))
 
+(defun grip--local-preview-copy (file)
+  "Return a local preview copy of FILE when it is remote."
+  (if (file-remote-p file)
+      (let ((local-file
+             (make-temp-file
+              (expand-file-name "grip-" temporary-file-directory)
+              nil ".md")))
+        (copy-file file local-file t)
+        local-file)
+    file))
+
 (defun grip--preview-1 ()
   "Preview in the embedded or external browser."
   (when (process-live-p grip--process)
@@ -292,30 +303,61 @@ Use default browser unless `xwidget' is available."
 
 (defun grip--preview-md ()
   "Render and preview markdown with grip."
-  (if grip-real-time-refresh
-      (progn
-        (setq grip--preview-file (concat buffer-file-name ".temp.md"))
-        (copy-file buffer-file-name grip--preview-file "overwrite"))
-    (setq grip--preview-file buffer-file-name))
-  (grip-start-process))
+  (let ((remote-file (file-remote-p buffer-file-name)))
+    (cond
+     (remote-file
+      (setq grip--preview-file
+            (make-temp-file
+             (expand-file-name "grip-" temporary-file-directory)
+             nil ".md"))
+      (grip--refresh))
+     (grip-real-time-refresh
+      (setq grip--preview-file (concat buffer-file-name ".temp.md"))
+      (copy-file buffer-file-name grip--preview-file "overwrite"))
+     (t
+      (setq grip--preview-file buffer-file-name)))
+    ;; go-grip and mdopen take a filename relative to their working
+    ;; directory.  TRAMP's default-directory cannot serve as a local cwd.
+    (let ((default-directory
+           (if remote-file
+               (file-name-directory grip--preview-file)
+             default-directory)))
+      (grip-start-process))
+    ;; Local preview tools watch the staged copy, not the remote file.
+    (when (and remote-file (not grip-real-time-refresh))
+      (add-hook 'after-save-hook #'grip--refresh nil t))))
 
 (defun grip-org-to-md (&rest _)
   "Render org to markdown."
-  (cond
-   ((fboundp 'org-gfm-export-to-markdown)
-    (org-gfm-export-to-markdown))
-   ((fboundp 'org-md-export-to-markdown)
-    (org-md-export-to-markdown))
-   (t
-    (user-error "Unable to export org to markdown"))))
+  (let ((file
+         (cond
+          ((fboundp 'org-gfm-export-to-markdown)
+           (org-gfm-export-to-markdown))
+          ((fboundp 'org-md-export-to-markdown)
+           (org-md-export-to-markdown))
+          (t
+           (user-error "Unable to export org to markdown")))))
+    ;; Keep the local preview copy in sync after exporting a remote Org file.
+    (when (and file
+               (file-remote-p buffer-file-name)
+               grip--preview-file
+               (not (file-remote-p grip--preview-file)))
+      (copy-file (expand-file-name file) grip--preview-file t))
+    file))
 
 (defun grip--preview-org ()
   "Render and preview org with grip."
   (add-hook 'after-save-hook #'grip-org-to-md nil t)
   (add-hook 'after-revert-hook #'grip-org-to-md nil t)
 
-  (setq grip--preview-file (expand-file-name (grip-org-to-md)))
-  (grip-start-process))
+  (let* ((markdown-file (expand-file-name (grip-org-to-md)))
+         (remote-file (file-remote-p markdown-file)))
+    (setq grip--preview-file (grip--local-preview-copy markdown-file))
+    (let ((default-directory
+           (if remote-file
+               (file-name-directory grip--preview-file)
+             default-directory)))
+      (grip-start-process))))
 
 (defun grip-start-preview ()
   "Start rendering and previewing with grip."
@@ -340,6 +382,7 @@ Use default browser unless `xwidget' is available."
   (remove-hook 'kill-buffer-hook #'grip-stop-preview t)
   (remove-hook 'kill-emacs-hook #'grip-stop-preview t)
   (remove-hook 'after-change-functions #'grip--refresh t)
+  (remove-hook 'after-save-hook #'grip--refresh t)
 
   ;; Kill grip process
   (grip--kill-process))
