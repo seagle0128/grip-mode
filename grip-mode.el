@@ -141,6 +141,9 @@ Currently available in mdopen."
 (defvar-local grip--preview-file nil
   "The preview file for grip process.")
 
+(defvar-local grip--preview-directory nil
+  "Local temporary directory used to stage remote preview files.")
+
 (defun grip--browser (url)
   "Use browser specified by user to load URL.
 Use default browser if nil."
@@ -177,13 +180,18 @@ Use default browser unless `xwidget' is available."
   "Save into the temp file to trigger refresh."
   (write-region (point-min) (point-max) grip--preview-file nil 'quiet))
 
+(defun grip--make-local-preview-file (file)
+  "Create a local preview file named after FILE in a private directory."
+  (setq grip--preview-directory
+        (make-temp-file
+         (expand-file-name "grip-" temporary-file-directory)
+         t))
+  (expand-file-name (file-name-nondirectory file) grip--preview-directory))
+
 (defun grip--local-preview-copy (file)
   "Return a local preview copy of FILE when it is remote."
   (if (file-remote-p file)
-      (let ((local-file
-             (make-temp-file
-              (expand-file-name "grip-" temporary-file-directory)
-              nil ".md")))
+      (let ((local-file (grip--make-local-preview-file file)))
         (copy-file file local-file t)
         local-file)
     file))
@@ -298,8 +306,14 @@ Use default browser unless `xwidget' is available."
   ;; could be killed by other ways, process may not existed, hence
   ;; deleting the file is separating out for the clean-up process.
   (when (and grip--preview-file
-             (not (string-equal grip--preview-file buffer-file-name)))
-    (delete-file grip--preview-file)))
+             (not (equal grip--preview-file buffer-file-name))
+             (file-exists-p grip--preview-file))
+    (delete-file grip--preview-file))
+  (when (and grip--preview-directory
+             (file-directory-p grip--preview-directory))
+    (delete-directory grip--preview-directory t))
+  (setq grip--preview-file nil
+        grip--preview-directory nil))
 
 (defun grip--preview-md ()
   "Render and preview markdown with grip."
@@ -307,9 +321,7 @@ Use default browser unless `xwidget' is available."
     (cond
      (remote-file
       (setq grip--preview-file
-            (make-temp-file
-             (expand-file-name "grip-" temporary-file-directory)
-             nil ".md"))
+            (grip--make-local-preview-file buffer-file-name))
       (grip--refresh))
      (grip-real-time-refresh
       (setq grip--preview-file (concat buffer-file-name ".temp.md"))
