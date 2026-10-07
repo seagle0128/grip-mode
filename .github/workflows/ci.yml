@@ -37,18 +37,13 @@ jobs:
         with:
           version: ${{ matrix.emacs-version }}
 
-      - uses: conao3/setup-cask@master
+      - uses: emacs-eask/setup-eask@master
         with:
           version: 'snapshot'
 
-      - name: install
-        run: "cask install"
-
-      - name: build
-        run: "cask build"
-
-      - name: test
-        run: "emacs -Q --batch -L . -L test -l test/grip-mode-test.el -f ert-run-tests-batch-and-exit"
-
-      - name: package
-        run: "cask package"
+      - name: Run tests
+        run: |
+          eask package
+          eask install
+          eask test ert-runner
+          eask compile

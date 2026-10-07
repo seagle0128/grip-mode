@@ -1,4 +1,4 @@
-;;; grip-mode.el --- Instant GitHub-flavored Markdown/Org preview using grip.        -*- lexical-binding: t; -*-
+;;; grip-mode.el --- Instant GitHub-flavored Markdown/Org preview using grip  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019-2026 Vincent Zhang
 
@@ -331,9 +331,9 @@ Use default browser unless `xwidget' is available."
     ;; go-grip and mdopen take a filename relative to their working
     ;; directory.  TRAMP's default-directory cannot serve as a local cwd.
     (let ((default-directory
-           (if remote-file
-               (file-name-directory grip--preview-file)
-             default-directory)))
+            (if remote-file
+                (file-name-directory grip--preview-file)
+              default-directory)))
       (grip-start-process))
     ;; Local preview tools watch the staged copy, not the remote file.
     (when (and remote-file (not grip-real-time-refresh))
@@ -366,9 +366,9 @@ Use default browser unless `xwidget' is available."
          (remote-file (file-remote-p markdown-file)))
     (setq grip--preview-file (grip--local-preview-copy markdown-file))
     (let ((default-directory
-           (if remote-file
-               (file-name-directory grip--preview-file)
-             default-directory)))
+            (if remote-file
+                (file-name-directory grip--preview-file)
+              default-directory)))
       (grip-start-process))))
 
 (defun grip-start-preview ()
