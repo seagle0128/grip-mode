@@ -47,5 +47,8 @@ jobs:
       - name: build
         run: "cask build"
 
+      - name: test
+        run: "emacs -Q --batch -L . -L test -l test/grip-mode-test.el -f ert-run-tests-batch-and-exit"
+
       - name: package
         run: "cask package"
