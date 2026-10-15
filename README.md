@@ -43,28 +43,35 @@ From melpa, `M-x package-install RET grip-mode RET`.
 
 ```emacs-lisp
 ;; Make a keybinding: `C-c C-c g'
-(define-key markdown-mode-command-map (kbd "g") #'grip-mode)
+(with-eval-after-load 'markdown-mode
+  (define-key markdown-mode-command-map (kbd "g") #'grip-mode))
+(with-eval-after-load 'markdown-ts-mode
+  (define-key markdown-ts-mode-map (kbd "C-c C-g") #'grip-mode))
+(with-eval-after-load 'org
+  (define-key org-mode (kbd "C-c C-g") #'grip-mode))
 
-;; Or start grip when opening a markdown/org buffer
+;; Or preview when opening a markdown/org buffer
 (add-hook 'markdown-mode-hook #'grip-mode)
+(add-hook 'markdown-ts-mode-hook #'grip-mode)
 (add-hook 'org-mode-hook #'grip-mode)
 ```
 
 ### Use-package
 
 ```emacs-lisp
-;; Use keybindings
+;; Use keybindings (e.g. for `markdown-mode`)
 (use-package grip-mode
   :ensure t
-  :config (setq grip-command 'auto) ;; auto, grip, go-grip or mdopen
+  :after markdown-mode
+  :custom (grip-command 'auto) ;; auto, grip, go-grip or mdopen
   :bind (:map markdown-mode-command-map
          ("g" . grip-mode)))
 
-;; Or using hooks
+;; Or using hooks to preview when opening a markdown/org buffer
 (use-package grip-mode
   :ensure t
-  :config (setq grip-command 'go-grip) ;; auto, grip, go-grip or mdopen
-  :hook ((markdown-mode org-mode) . grip-mode))
+  :custoom (grip-command 'auto) ;; auto, grip, go-grip or mdopen
+  :hook (markdown-mode markdown-ts-mode org-mode))
 ```
 
 ⚠️ NOTE: `mdopen` and `go-grips` locally, does not use the github API, and supports emacs webkit preview. ⚠️
@@ -121,6 +128,9 @@ Run `M-x customize-group RET grip RET` or set the variables.
 
 ;; Set to allow real-time refresh
 (setq grip-real-time-refresh t)
+
+;; Color theme for the rendered preview. Currently available in mdopen.
+(setq grip-theme 'auto)
 ```
 
 If you don't set them you may have limitation to access Github APIs. Please
